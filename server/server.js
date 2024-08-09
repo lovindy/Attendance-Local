@@ -16,7 +16,7 @@ app.use("/api", attendanceRoutes);
 app.use("/api", teacherRoutes);
 app.use("/api", adminRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 sequelize
   .sync()
