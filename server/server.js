@@ -1,20 +1,7 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+// server.js
 const sequelize = require("./config/database");
-const attendanceRoutes = require("./routes/attendanceRoutes");
-const teacherRoutes = require("./routes/teacherRoutes");
-const adminRoutes = require("./routes/adminRoutes");
+const app = require("./app");
 require("dotenv").config();
-
-const app = express();
-
-app.use(cors());
-app.use(bodyParser.json());
-
-app.use("/api", attendanceRoutes);
-app.use("/api", teacherRoutes);
-app.use("/api", adminRoutes);
 
 const PORT = process.env.PORT || 8000;
 

@@ -1,53 +1,14 @@
 const { Admin } = require("../models");
+const factory = require("./handlerFactory");
 
 // Get all admins
-exports.getAdmins = async (req, res) => {
-  try {
-    const admins = await Admin.findAll();
-    res.json(admins);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+exports.getAdmins = factory.getAll(Admin);
 
 // Add a new admin
-exports.addAdmin = async (req, res) => {
-  try {
-    const admin = await Admin.create(req.body);
-    res.status(201).json(admin);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+exports.addAdmin = factory.createOne(Admin);
 
 // Update admin
-exports.updateAdmin = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const admin = await Admin.findByPk(id);
-    if (admin) {
-      await admin.update(req.body);
-      res.json(admin);
-    } else {
-      res.status(404).json({ error: "Admin not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+exports.updateAdmin = factory.updateOne(Admin);
 
 // Delete admin
-exports.deleteAdmin = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const admin = await Admin.findByPk(id);
-    if (admin) {
-      await admin.destroy();
-      res.status(204).send();
-    } else {
-      res.status(404).json({ error: "Admin not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+exports.deleteAdmin = factory.deleteOne(Admin);

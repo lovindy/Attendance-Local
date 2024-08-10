@@ -7,10 +7,12 @@ import Footer from "./components/layout/Footer";
 import StudentsPage from "./pages/StudentsPage";
 import TeachersPage from "./pages/TeachersPage";
 import AdminsPage from "./pages/AdminsPage";
+import Navbar from "./components/common/NavBar";
 
 const App = () => (
   <>
     <Header />
+    <Navbar />
     <Routes>
       <Route path="/" element={<DashboardPage />} />
       <Route path="/attendance" element={<AttendancePage />} />
