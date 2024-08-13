@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAdmins } from "../features/admin/adminSlice";
-import AdminCard from "../components/specific/AdminCard";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAdmins } from '../features/admin/adminSlice';
+import AdminCard from '../components/specific/AdminCard';
 
 const AdminsPage = () => {
   const dispatch = useDispatch();
@@ -9,7 +9,7 @@ const AdminsPage = () => {
   const status = useSelector((state) => state.admin.status);
 
   useEffect(() => {
-    if (status === "idle") {
+    if (status === 'idle') {
       dispatch(fetchAdmins());
     }
   }, [status, dispatch]);

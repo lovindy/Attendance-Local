@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchStudents } from "../features/student/studentSlice";
-import StudentCard from "../components/specific/StudentCard";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchStudents } from '../features/student/studentSlice';
+import StudentCard from '../components/specific/StudentCard';
 
 const StudentsPage = () => {
   const dispatch = useDispatch();
@@ -9,7 +9,7 @@ const StudentsPage = () => {
   const status = useSelector((state) => state.student.status);
 
   useEffect(() => {
-    if (status === "idle") {
+    if (status === 'idle') {
       dispatch(fetchStudents());
     }
   }, [status, dispatch]);

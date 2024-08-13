@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_URL = "http://localhost:8000/api";
+const API_URL = 'http://localhost:8000/api';
 
 // Student API
 const fetchStudents = () => axios.get(`${API_URL}/students`);
@@ -29,20 +29,39 @@ const createAdmin = (admin) => axios.post(`${API_URL}/admins`, admin);
 const updateAdmin = (id, admin) => axios.put(`${API_URL}/admins/${id}`, admin);
 const deleteAdmin = (id) => axios.delete(`${API_URL}/admins/${id}`);
 
+// User API
+const fetchUsers = () => axios.get(`${API_URL}/users`);
+const createUser = (user) => axios.post(`${API_URL}/users`, user);
+const updateUser = (id, user) => axios.post(`${API_URL}/users/${id}`, user);
+const deleteUser = (id) => axios.post(`${API_URL}/users/${id}`, user);
+
 export default {
+  // Student
   fetchStudents,
   createStudent,
   updateStudent,
   deleteStudent,
+
+  // Attendance
   recordAttendance,
   updateAttendance,
   deleteAttendance,
+
+  // Teacher
   fetchTeachers,
   createTeacher,
   updateTeacher,
   deleteTeacher,
+
+  // Admin
   fetchAdmins,
   createAdmin,
   updateAdmin,
   deleteAdmin,
+
+  // User
+  fetchUsers,
+  createUser,
+  updateUser,
+  deleteUser,
 };
