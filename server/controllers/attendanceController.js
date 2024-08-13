@@ -32,13 +32,13 @@ exports.recordAttendance = async (req, res) => {
 exports.addStudent = factory.createOne(Student);
 
 // Update student
-exports.updateStudent = factory.updateOne(Student);
+exports.updateStudent = factory.updateOne(Student, 'student_id');
 
 // Delete student
-exports.deleteStudent = factory.deleteOne(Student);
+exports.deleteStudent = factory.deleteOne(Student, 'student_id');
 
 // Update attendance
-exports.updateAttendance = factory.updateOne(Attendance);
+exports.updateAttendance = factory.updateOne(Attendance, 'attendance_id');
 
 // Delete attendance
-exports.deleteAttendance = factory.deleteOne(Attendance);
+exports.deleteAttendance = factory.deleteOne(Attendance, 'attendance_id');

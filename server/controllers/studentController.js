@@ -2,7 +2,7 @@ const { Student } = require('../models');
 const factory = require('./handlerFactory');
 
 // Get one student
-exports.getStudent = factory.getOne(Student);
+exports.getStudent = factory.getOne(Student, 'student_id');
 
 // Get all students
 exports.getAllStudents = factory.getAll(Student);
@@ -11,7 +11,7 @@ exports.getAllStudents = factory.getAll(Student);
 exports.addStudent = factory.createOne(Student);
 
 // Update student
-exports.updateStudent = factory.updateOne(Student);
+exports.updateStudent = factory.updateOne(Student, 'student_id');
 
 // Delete student
-exports.deleteStudent = factory.deleteOne(Student);
+exports.deleteStudent = factory.deleteOne(Student, 'student_id');
