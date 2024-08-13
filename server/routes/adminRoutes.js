@@ -3,9 +3,9 @@ const adminController = require("../controllers/adminController");
 
 const router = express.Router();
 
-router.get("/admins", adminController.getAdmins);
-router.post("/admins", adminController.addAdmin);
-router.put("/admins/:id", adminController.updateAdmin);
-router.delete("/admins/:id", adminController.deleteAdmin);
+router.get("/", adminController.getAdmins);
+router.post("/", adminController.addAdmin);
+router.put("/:id", adminController.updateAdmin);
+router.delete("/:id", adminController.deleteAdmin);
 
 module.exports = router;

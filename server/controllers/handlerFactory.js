@@ -1,5 +1,6 @@
-const catchAsync = require("./../utils/catchAsync");
-const AppError = require("./../utils/appError");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
+const APIFeatures = require("../utils/apiFeatures");
 
 // create handlerFactory function
 
@@ -83,20 +84,20 @@ exports.getOne = (Model, popOptions) =>
 // Get All
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    // To allow for nested GET reviews on a tour (hack)
     let filter = {};
     if (req.params.tourId) filter = { tourId: req.params.tourId };
 
-    const features = new APIFeatures(
-      Model.findAll({ where: filter }),
-      req.query
-    )
+    const features = new APIFeatures(Model, req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
 
-    const doc = await features.query;
+    const doc = await features.exec();
+
+    if (!doc) {
+      return next(new AppError("No documents found", 404));
+    }
 
     res.status(200).json({
       status: "success",

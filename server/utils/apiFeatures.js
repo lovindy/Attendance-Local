@@ -2,6 +2,7 @@ class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
+    this.options = {}; // Collect options for findAll here
   }
 
   filter() {
@@ -9,7 +10,6 @@ class APIFeatures {
     const excludedFields = ["page", "sort", "limit", "fields"];
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    // Advanced filtering for Sequelize
     let filters = {};
     Object.keys(queryObj).forEach((key) => {
       if (/\b(gte|gt|lte|lt)\b/.test(key)) {
@@ -20,7 +20,7 @@ class APIFeatures {
       }
     });
 
-    this.query = this.query.findAll({ where: filters });
+    this.options.where = filters;
 
     return this;
   }
@@ -30,15 +30,9 @@ class APIFeatures {
       const sortBy = this.queryString.sort
         .split(",")
         .map((el) => el.split(":"));
-      this.query = this.query.findAll({
-        ...this.query.options,
-        order: sortBy,
-      });
+      this.options.order = sortBy;
     } else {
-      this.query = this.query.findAll({
-        ...this.query.options,
-        order: [["createdAt", "DESC"]],
-      });
+      this.options.order = [["createdAt", "DESC"]];
     }
 
     return this;
@@ -47,15 +41,9 @@ class APIFeatures {
   limitFields() {
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(",");
-      this.query = this.query.findAll({
-        ...this.query.options,
-        attributes: fields,
-      });
+      this.options.attributes = fields;
     } else {
-      this.query = this.query.findAll({
-        ...this.query.options,
-        attributes: { exclude: ["__v"] },
-      });
+      this.options.attributes = { exclude: ["__v"] };
     }
 
     return this;
@@ -66,13 +54,14 @@ class APIFeatures {
     const limit = this.queryString.limit * 1 || 100;
     const offset = (page - 1) * limit;
 
-    this.query = this.query.findAll({
-      ...this.query.options,
-      limit,
-      offset,
-    });
+    this.options.limit = limit;
+    this.options.offset = offset;
 
     return this;
+  }
+
+  async exec() {
+    return await this.query.findAll(this.options);
   }
 }
 
