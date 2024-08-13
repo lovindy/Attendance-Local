@@ -78,14 +78,14 @@
 
 // export default AttendanceTable;
 
-import React from "react";
+import React from 'react';
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-} from "@mui/material";
+} from '@mui/material';
 
 const AttendanceTable = ({ attendance }) => {
   return (

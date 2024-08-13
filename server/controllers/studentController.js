@@ -5,7 +5,7 @@ const factory = require('./handlerFactory');
 exports.getStudent = factory.getOne(Student);
 
 // Get all students
-exports.getStudents = factory.getAll(Student);
+exports.getAllStudents = factory.getAll(Student);
 
 // Add a new student
 exports.addStudent = factory.createOne(Student);

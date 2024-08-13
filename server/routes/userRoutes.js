@@ -1,35 +1,12 @@
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    'User',
-    {
-      user_id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      role: {
-        type: DataTypes.ENUM('admin', 'teacher', 'student'),
-        allowNull: false,
-      },
-    },
-    {
-      tableName: 'users',
-      timestamps: true,
-    }
-  );
+const express = require('express');
+const userController = require('../controllers/userController');
 
-  return User;
-};
+const router = express.Router();
+
+router.get('/', userController.getUsers);
+router.post('/', userController.addUser);
+router.get('/:id', userController.getUser);
+router.put('/:id', userController.updateUser);
+router.delete('/:id', userController.deleteUser);
+
+module.exports = router;
