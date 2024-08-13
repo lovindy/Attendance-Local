@@ -5,7 +5,12 @@ const factory = require('./handlerFactory');
 exports.getStudentsWithAttendance = async (req, res) => {
   try {
     const students = await Student.findAll({
-      include: [Attendance],
+      include: [
+        {
+          model: Attendance,
+          as: 'Attendances', // Use the alias specified in your associations
+        },
+      ],
     });
     res.json(students);
   } catch (error) {
