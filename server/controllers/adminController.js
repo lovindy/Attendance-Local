@@ -1,6 +1,9 @@
 const { Admin } = require("../models");
 const factory = require("./handlerFactory");
 
+// Get one admin
+exports.getAdmin = factory.getOne(Admin);
+
 // Get all admins
 exports.getAdmins = factory.getAll(Admin);
 
