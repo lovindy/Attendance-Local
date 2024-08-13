@@ -11,8 +11,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use("/api", attendanceRoutes);
-app.use("/api", teacherRoutes);
-app.use("/api", adminRoutes);
+app.use("/api/v1/attendance", attendanceRoutes);
+app.use("/api/v1/teachers", teacherRoutes);
+app.use("/api/v1/admins", adminRoutes);
 
 module.exports = app;
