@@ -133,10 +133,10 @@
 
 // export default AttendancePage;
 
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAttendance } from "../features/attendance/attendanceSlice";
-import AttendanceTable from "../components/specific/AttendanceTable";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAttendance } from '../features/attendance/attendanceSlice';
+import AttendanceTable from '../components/specific/AttendanceTable';
 
 const AttendancePage = () => {
   const dispatch = useDispatch();
@@ -144,7 +144,7 @@ const AttendancePage = () => {
   const status = useSelector((state) => state.attendance.status);
 
   useEffect(() => {
-    if (status === "idle") {
+    if (status === 'idle') {
       dispatch(fetchAttendance());
     }
   }, [status, dispatch]);
