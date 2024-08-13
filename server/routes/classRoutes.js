@@ -1,11 +1,16 @@
+// Frameworks
 const express = require("express");
+
+// Controllers
 const classController = require("../controllers/classController");
 
+// Define router for class routes
 const router = express.Router();
 
-router.get("/classes", classController.getClasses);
-router.post("/classes", classController.addClass);
-router.put("/classes/:id", classController.updateClass);
-router.delete("/classes/:id", classController.deleteClass);
+// Class routes
+router.get("/", classController.getClasses);
+router.post("/", classController.addClass);
+router.put("/:id", classController.updateClass);
+router.delete("/:id", classController.deleteClass);
 
 module.exports = router;

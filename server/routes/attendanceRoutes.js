@@ -10,8 +10,8 @@ router.put("/students/:id", attendanceController.updateStudent);
 router.delete("/students/:id", attendanceController.deleteStudent);
 
 // Attendance routes
-router.post("/attendance", attendanceController.recordAttendance);
-router.put("/attendance/:id", attendanceController.updateAttendance);
-router.delete("/attendance/:id", attendanceController.deleteAttendance);
+router.post("/", attendanceController.recordAttendance);
+router.put("/:id", attendanceController.updateAttendance);
+router.delete("/:id", attendanceController.deleteAttendance);
 
 module.exports = router;
