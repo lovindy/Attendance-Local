@@ -46,17 +46,19 @@ const Sequelize = require("sequelize");
 const sequelize = require("../config/database");
 
 // Import all the models
-const Student = require("./Student");
-const Attendance = require("./Attendance");
-const Teacher = require("./Teacher");
-const Admin = require("./Admin");
-const Class = require("./Class");
-const Subject = require("./Subject");
+const User = require("./userModel");
+const Attendance = require("./attendanceModel");
+const Student = require("./studentModel");
+const Teacher = require("./teacherModel");
+const Admin = require("./adminModel");
+const Class = require("./classModel");
+const Subject = require("./subjectModel");
 
 // Initialize models
 const models = {
-  Student: Student(sequelize, Sequelize.DataTypes),
+  User: User(sequelize, Sequelize.DataTypes),
   Attendance: Attendance(sequelize, Sequelize.DataTypes),
+  Student: Student(sequelize, Sequelize.DataTypes),
   Teacher: Teacher(sequelize, Sequelize.DataTypes),
   Admin: Admin(sequelize, Sequelize.DataTypes),
   Class: Class(sequelize, Sequelize.DataTypes),
@@ -64,6 +66,34 @@ const models = {
 };
 
 // Define relationships
+// User Role Relationships
+models.User.hasOne(models.Student, {
+  foreignKey: "userId",
+  as: "StudentProfile",
+});
+models.Student.belongsTo(models.User, {
+  foreignKey: "userId",
+  as: "User",
+});
+
+models.User.hasOne(models.Teacher, {
+  foreignKey: "userId",
+  as: "TeacherProfile",
+});
+models.Teacher.belongsTo(models.User, {
+  foreignKey: "userId",
+  as: "User",
+});
+
+models.User.hasOne(models.Admin, {
+  foreignKey: "userId",
+  as: "AdminProfile",
+});
+models.Admin.belongsTo(models.User, {
+  foreignKey: "userId",
+  as: "User",
+});
+
 // Admin-Teacher Relationship
 models.Admin.hasMany(models.Teacher, {
   foreignKey: "adminId",
