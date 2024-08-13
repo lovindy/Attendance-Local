@@ -3,7 +3,7 @@ const adminController = require('../controllers/adminController');
 
 const router = express.Router();
 
-router.get('/', adminController.getAdmins);
+router.get('/', adminController.getAllAdmins);
 router.post('/', adminController.addAdmin);
 router.get('/:id', adminController.getAdmin);
 router.put('/:id', adminController.updateAdmin);

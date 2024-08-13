@@ -81,11 +81,11 @@ exports.getOne = (Model, popOptions) =>
     });
   });
 
-// Get All
+// Get All Need to fix more flexible
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
-    if (req.params.tourId) filter = { tourId: req.params.tourId };
+    if (req.params.TeacherId) filter = { TeacherId: req.params.TeacherId };
 
     const features = new APIFeatures(Model, req.query)
       .filter()

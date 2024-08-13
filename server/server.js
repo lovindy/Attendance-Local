@@ -1,6 +1,7 @@
 // server.js
 const sequelize = require('./config/database');
 const app = require('./app');
+const cors = require('cors');
 require('dotenv').config();
 
 // Define port
@@ -11,7 +12,8 @@ sequelize
   .sync()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      console.log('Database connected successfully');
+      console.log(`Server is running on port ${PORT}...`);
     });
   })
   .catch((err) => {

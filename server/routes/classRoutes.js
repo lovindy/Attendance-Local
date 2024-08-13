@@ -8,7 +8,7 @@ const classController = require('../controllers/classController');
 const router = express.Router();
 
 // Class routes
-router.get('/', classController.getClasses);
+router.get('/', classController.getAllClasses);
 router.post('/', classController.addClass);
 router.get('/:id', classController.getClass);
 router.put('/:id', classController.updateClass);

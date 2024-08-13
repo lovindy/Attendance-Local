@@ -18,6 +18,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the School API');
+});
 app.use('/api/v1/attendance', attendanceRoutes);
 app.use('/api/v1/teachers', teacherRoutes);
 app.use('/api/v1/students', studentRoutes);

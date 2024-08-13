@@ -2,7 +2,7 @@ const { Class } = require('../models');
 const factory = require('./handlerFactory');
 
 // Get all classes
-exports.getClasses = factory.getAll(Class);
+exports.getAllClasses = factory.getAll(Class);
 
 // Add a new class
 exports.addClass = factory.createOne(Class);

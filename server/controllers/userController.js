@@ -5,7 +5,7 @@ const factory = require('./handlerFactory');
 exports.getUser = factory.getOne(User);
 
 // Get all Users
-exports.getUsers = factory.getAll(User);
+exports.getAllUsers = factory.getAll(User);
 
 // Add a new User
 exports.addUser = factory.createOne(User);

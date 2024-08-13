@@ -5,7 +5,7 @@ const factory = require('./handlerFactory');
 exports.getAdmin = factory.getOne(Admin);
 
 // Get all admins
-exports.getAdmins = factory.getAll(Admin);
+exports.getAllAdmins = factory.getAll(Admin);
 
 // Add a new admin
 exports.addAdmin = factory.createOne(Admin);
