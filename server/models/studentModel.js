@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Student = sequelize.define(
-    "Student",
+    'Student',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "students", // Ensure the table name matches database schema
+      tableName: 'students', // Ensure the table name matches database schema
       timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
     }
   );

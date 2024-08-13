@@ -1,5 +1,5 @@
-const { Class } = require("../models");
-const factory = require("./handlerFactory");
+const { Class } = require('../models');
+const factory = require('./handlerFactory');
 
 // Get all classes
 exports.getClasses = factory.getAll(Class);

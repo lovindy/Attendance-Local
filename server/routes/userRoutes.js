@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    "User",
+    'User',
     {
       user_id: {
         type: DataTypes.INTEGER,
@@ -21,12 +21,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       role: {
-        type: DataTypes.ENUM("admin", "teacher", "student"),
+        type: DataTypes.ENUM('admin', 'teacher', 'student'),
         allowNull: false,
       },
     },
     {
-      tableName: "users",
+      tableName: 'users',
       timestamps: true,
     }
   );

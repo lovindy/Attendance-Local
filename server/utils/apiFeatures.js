@@ -7,13 +7,13 @@ class APIFeatures {
 
   filter() {
     const queryObj = { ...this.queryString };
-    const excludedFields = ["page", "sort", "limit", "fields"];
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
     let filters = {};
     Object.keys(queryObj).forEach((key) => {
       if (/\b(gte|gt|lte|lt)\b/.test(key)) {
-        const [field, operator] = key.split("_");
+        const [field, operator] = key.split('_');
         filters[field] = { [Sequelize.Op[operator]]: queryObj[key] };
       } else {
         filters[key] = queryObj[key];
@@ -28,11 +28,11 @@ class APIFeatures {
   sort() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort
-        .split(",")
-        .map((el) => el.split(":"));
+        .split(',')
+        .map((el) => el.split(':'));
       this.options.order = sortBy;
     } else {
-      this.options.order = [["createdAt", "DESC"]];
+      this.options.order = [['createdAt', 'DESC']];
     }
 
     return this;
@@ -40,10 +40,10 @@ class APIFeatures {
 
   limitFields() {
     if (this.queryString.fields) {
-      const fields = this.queryString.fields.split(",");
+      const fields = this.queryString.fields.split(',');
       this.options.attributes = fields;
     } else {
-      this.options.attributes = { exclude: ["__v"] };
+      this.options.attributes = { exclude: ['__v'] };
     }
 
     return this;

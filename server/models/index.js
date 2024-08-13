@@ -42,17 +42,17 @@
 
 // module.exports = db;
 
-const Sequelize = require("sequelize");
-const sequelize = require("../config/database");
+const Sequelize = require('sequelize');
+const sequelize = require('../config/database');
 
 // Import all the models
-const User = require("./userModel");
-const Attendance = require("./attendanceModel");
-const Student = require("./studentModel");
-const Teacher = require("./teacherModel");
-const Admin = require("./adminModel");
-const Class = require("./classModel");
-const Subject = require("./subjectModel");
+const User = require('./userModel');
+const Attendance = require('./attendanceModel');
+const Student = require('./studentModel');
+const Teacher = require('./teacherModel');
+const Admin = require('./adminModel');
+const Class = require('./classModel');
+const Subject = require('./subjectModel');
 
 // Initialize models
 const models = {
@@ -68,82 +68,82 @@ const models = {
 // Define relationships
 // User Role Relationships
 models.User.hasOne(models.Student, {
-  foreignKey: "userId",
-  as: "StudentProfile",
+  foreignKey: 'userId',
+  as: 'StudentProfile',
 });
 models.Student.belongsTo(models.User, {
-  foreignKey: "userId",
-  as: "User",
+  foreignKey: 'userId',
+  as: 'User',
 });
 
 models.User.hasOne(models.Teacher, {
-  foreignKey: "userId",
-  as: "TeacherProfile",
+  foreignKey: 'userId',
+  as: 'TeacherProfile',
 });
 models.Teacher.belongsTo(models.User, {
-  foreignKey: "userId",
-  as: "User",
+  foreignKey: 'userId',
+  as: 'User',
 });
 
 models.User.hasOne(models.Admin, {
-  foreignKey: "userId",
-  as: "AdminProfile",
+  foreignKey: 'userId',
+  as: 'AdminProfile',
 });
 models.Admin.belongsTo(models.User, {
-  foreignKey: "userId",
-  as: "User",
+  foreignKey: 'userId',
+  as: 'User',
 });
 
 // Admin-Teacher Relationship
 models.Admin.hasMany(models.Teacher, {
-  foreignKey: "adminId",
-  as: "Teachers",
+  foreignKey: 'adminId',
+  as: 'Teachers',
 });
 models.Teacher.belongsTo(models.Admin, {
-  foreignKey: "adminId",
-  as: "Admin",
+  foreignKey: 'adminId',
+  as: 'Admin',
 });
 
 // A teacher checks many attendance records
 models.Teacher.hasMany(models.Attendance, {
-  foreignKey: "teacherId",
-  as: "CheckedAttendances",
+  foreignKey: 'teacherId',
+  as: 'CheckedAttendances',
 });
 models.Attendance.belongsTo(models.Teacher, {
-  foreignKey: "teacherId",
-  as: "CheckedBy",
+  foreignKey: 'teacherId',
+  as: 'CheckedBy',
 });
 
 // A student has many attendance records
 models.Student.hasMany(models.Attendance, {
-  foreignKey: "studentId",
-  as: "Attendances",
+  foreignKey: 'studentId',
+  as: 'Attendances',
 });
 models.Attendance.belongsTo(models.Student, {
-  foreignKey: "studentId",
-  as: "Student",
+  foreignKey: 'studentId',
+  as: 'Student',
 });
 
 // Class-Student Relationship
 models.Class.hasMany(models.Student, {
-  foreignKey: "classId",
-  as: "Students",
+  foreignKey: 'classId',
+  as: 'Students',
 });
 models.Student.belongsTo(models.Class, {
-  foreignKey: "classId",
-  as: "Class",
+  foreignKey: 'classId',
+  as: 'Class',
 });
 
 // Subject-Class Relationship
 models.Subject.belongsToMany(models.Class, {
-  through: "ClassSubjects",
-  foreignKey: "subjectId",
-  as: "Classes",
+  through: 'ClassSubjects',
+  foreignKey: 'subjectId',
+  as: 'Classes',
 });
 models.Class.belongsToMany(models.Subject, {
-  through: "ClassSubjects",
-  foreignKey: "classId",
-  as: "Subjects",
+  through: 'ClassSubjects',
+  foreignKey: 'classId',
+  as: 'Subjects',
 });
 
 models.sequelize = sequelize;

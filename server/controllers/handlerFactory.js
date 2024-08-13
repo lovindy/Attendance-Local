@@ -1,8 +1,8 @@
-const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
-const APIFeatures = require("../utils/apiFeatures");
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 
-// create handlerFactory function
+// Create handlerFactory function
 
 // Delete One
 exports.deleteOne = (Model) =>
@@ -12,11 +12,11 @@ exports.deleteOne = (Model) =>
     });
 
     if (!doc) {
-      return next(new AppError("No document found with that ID", 404));
+      return next(new AppError('No document found with that ID', 404));
     }
 
     res.status(204).json({
-      status: "success",
+      status: 'success',
       data: null,
     });
   });
@@ -32,11 +32,11 @@ exports.updateOne = (Model) =>
 
     if (!doc[1]) {
       // doc[1] contains the updated object, if any
-      return next(new AppError("No document found with that ID", 404));
+      return next(new AppError('No document found with that ID', 404));
     }
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: {
         data: doc[1], // return the updated document
       },
@@ -49,7 +49,7 @@ exports.createOne = (Model) =>
     const doc = await Model.create(req.body);
 
     res.status(201).json({
-      status: "success",
+      status: 'success',
       data: {
         data: doc,
       },
@@ -70,11 +70,11 @@ exports.getOne = (Model, popOptions) =>
     const doc = await Model.findOne(options);
 
     if (!doc) {
-      return next(new AppError("No document found with that ID", 404));
+      return next(new AppError('No document found with that ID', 404));
     }
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: {
         data: doc,
       },
@@ -96,11 +96,11 @@ exports.getAll = (Model) =>
     const doc = await features.exec();
 
     if (!doc) {
-      return next(new AppError("No documents found", 404));
+      return next(new AppError('No documents found', 404));
     }
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       results: doc.length,
       data: {
         data: doc,

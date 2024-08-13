@@ -1,5 +1,5 @@
-const { Student, Attendance } = require("../models");
-const factory = require("./handlerFactory");
+const { Student, Attendance } = require('../models');
+const factory = require('./handlerFactory');
 
 // Get all students with attendance records
 exports.getStudentsWithAttendance = async (req, res) => {

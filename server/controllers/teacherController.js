@@ -1,5 +1,5 @@
-const { Teacher } = require("../models");
-const factory = require("./handlerFactory");
+const { Teacher } = require('../models');
+const factory = require('./handlerFactory');
 
 // Get one teacher
 exports.getTeacher = factory.getOne(Teacher);

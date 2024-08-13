@@ -1,7 +1,7 @@
 // server.js
-const sequelize = require("./config/database");
-const app = require("./app");
-require("dotenv").config();
+const sequelize = require('./config/database');
+const app = require('./app');
+require('dotenv').config();
 
 // Define port
 const PORT = process.env.PORT || 8000;
@@ -15,5 +15,5 @@ sequelize
     });
   })
   .catch((err) => {
-    console.log("Error: ", err);
+    console.log('Error: ', err);
   });
