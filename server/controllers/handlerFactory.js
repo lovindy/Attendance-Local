@@ -71,43 +71,6 @@ exports.getAll = (Model, additionalFilter = {}) =>
     });
   });
 
-// Delete One
-// exports.deleteOne = (Model) =>
-//   catchAsync(async (req, res, next) => {
-//     const doc = await Model.destroy({
-//       where: { id: req.params.id },
-//     });
-
-//     if (!doc) {
-//       return next(new AppError('No document found with that ID', 404));
-//     }
-
-//     res.status(204).json({
-//       status: 'success',
-//       data: null,
-//     });
-//   });
-
-exports.deleteOne = (Model, idField) =>
-  catchAsync(async (req, res, next) => {
-    console.log(
-      `Attempting to delete record with ${idField}: ${req.params.id}`
-    ); // Log the correct ID field
-    const doc = await Model.destroy({
-      where: { [idField]: req.params.id },
-    });
-
-    if (!doc) {
-      console.error(`No document found with ${idField}: ${req.params.id}`); // Log if no record is found
-      return next(new AppError(`No document found with that ${idField}`, 404));
-    }
-
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  });
-
 // Update One
 exports.updateOne = (Model, idField) =>
   catchAsync(async (req, res, next) => {
@@ -127,5 +90,25 @@ exports.updateOne = (Model, idField) =>
       data: {
         data: doc[1], // return the updated document
       },
+    });
+  });
+
+exports.deleteOne = (Model, idField) =>
+  catchAsync(async (req, res, next) => {
+    console.log(
+      `Attempting to delete record with ${idField}: ${req.params.id}`
+    ); // Log the correct ID field
+    const doc = await Model.destroy({
+      where: { [idField]: req.params.id },
+    });
+
+    if (!doc) {
+      console.error(`No document found with ${idField}: ${req.params.id}`); // Log if no record is found
+      return next(new AppError(`No document found with that ${idField}`, 404));
+    }
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
     });
   });

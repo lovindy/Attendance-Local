@@ -1,5 +1,3 @@
-const { DATE } = require('mysql/lib/protocol/constants/types');
-
 module.exports = (sequelize, DataTypes) => {
   const Attendance = sequelize.define(
     'Attendance',
@@ -16,20 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       present: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-      },
-      studentId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'students', // Should match the table name
-          key: 'id',
-        },
-      },
-      teacherId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'teachers', // Should match the table name
-          key: 'teacher_id',
-        },
       },
     },
     {
