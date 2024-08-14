@@ -137,6 +137,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAttendance } from '../features/attendance/attendanceSlice';
 import AttendanceTable from '../components/specific/AttendanceTable';
+import AttendanceForm from '../components/specific/AttendanceForm';
 
 const AttendancePage = () => {
   const dispatch = useDispatch();
@@ -151,7 +152,8 @@ const AttendancePage = () => {
 
   return (
     <div>
-      <h1>Attendance</h1>
+      <h1>Attendance Management</h1>
+      <AttendanceForm attendance={attendance} />
       <AttendanceTable attendance={attendance} />
     </div>
   );

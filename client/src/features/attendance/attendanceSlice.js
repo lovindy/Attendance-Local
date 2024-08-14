@@ -9,6 +9,14 @@ export const fetchAttendance = createAsyncThunk(
   }
 );
 
+export const createAttendanceRecord = createAsyncThunk(
+  'attendance/createAttendanceRecord',
+  async (attendance) => {
+    const response = await api.post('/attendance', attendance);
+    return response.data;
+  }
+);
+
 const attendanceSlice = createSlice({
   name: 'attendance',
   initialState: {
@@ -28,6 +36,12 @@ const attendanceSlice = createSlice({
       })
       .addCase(fetchAttendance.rejected, (state, action) => {
         state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(createAttendanceRecord.fulfilled, (state, action) => {
+        state.data.push(action.payload);
+      })
+      .addCase(createAttendanceRecord.rejected, (state, action) => {
         state.error = action.error.message;
       });
   },

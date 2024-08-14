@@ -79,34 +79,33 @@
 // export default AttendanceTable;
 
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@mui/material';
 
 const AttendanceTable = ({ attendance }) => {
+  if (!attendance || attendance.length === 0) {
+    return <p>No attendance records found.</p>;
+  }
+
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Student</TableCell>
-          <TableCell>Date</TableCell>
-          <TableCell>Status</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Student ID</th>
+          <th>Teacher ID</th>
+          <th>Present</th>
+        </tr>
+      </thead>
+      <tbody>
         {attendance.map((record) => (
-          <TableRow key={record.id}>
-            <TableCell>{record.student.name}</TableCell>
-            <TableCell>{record.date}</TableCell>
-            <TableCell>{record.status}</TableCell>
-          </TableRow>
+          <tr key={record.attendance_id}>
+            <td>{record.date}</td>
+            <td>{record.studentId}</td>
+            <td>{record.teacherId}</td>
+            <td>{record.present ? 'Yes' : 'No'}</td>
+          </tr>
         ))}
-      </TableBody>
-    </Table>
+      </tbody>
+    </table>
   );
 };
 
