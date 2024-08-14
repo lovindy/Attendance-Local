@@ -2,7 +2,8 @@ module.exports = (sequelize, DataTypes) => {
   const Student = sequelize.define(
     'Student',
     {
-      id: {
+      student_id: {
+        // Ensure primary key matches association
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -13,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: 'students', // Ensure the table name matches database schema
-      timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
+      tableName: 'students',
+      timestamps: true,
     }
   );
 

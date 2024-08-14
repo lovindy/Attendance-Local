@@ -105,7 +105,7 @@ exports.getOne = (Model, idField, popOptions) =>
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
-    if (req.params.TeacherId) filter = { TeacherId: req.params.TeacherId };
+    if (req.params.id) filter = { id: req.params.id };
 
     const features = new APIFeatures(Model, req.query)
       .filter()

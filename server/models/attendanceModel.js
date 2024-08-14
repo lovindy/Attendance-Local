@@ -1,3 +1,5 @@
+const { DATE } = require('mysql/lib/protocol/constants/types');
+
 module.exports = (sequelize, DataTypes) => {
   const Attendance = sequelize.define(
     'Attendance',

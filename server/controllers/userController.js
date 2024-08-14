@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
 // Get one User

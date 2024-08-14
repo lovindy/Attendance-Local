@@ -151,7 +151,7 @@ models.Sequelize = Sequelize;
 
 module.exports = models;
 
-// // Export models along with sequelize instance
+// Export models along with sequelize instance
 // module.exports = {
 //   ...models,
 //   sequelize,
