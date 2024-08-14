@@ -71,24 +71,48 @@ exports.getAll = (Model, additionalFilter = {}) =>
     });
   });
 
-// Update One
-exports.updateOne = (Model, idField) =>
+// // Update One
+// exports.updateOne = (Model, idField) =>
+//   catchAsync(async (req, res, next) => {
+//     const doc = await Model.update(req.body, {
+//       where: { [idField]: req.params.id }, // Use the dynamic ID field
+//       returning: true, // returns the updated object(s) in an array
+//       plain: true, // makes sure that only the object itself is returned
+//     });
+
+//     if (!doc[1]) {
+//       // doc[1] contains the updated object, if any
+//       return next(new AppError(`No document found with that ${idField}`, 404));
+//     }
+
+//     res.status(200).json({
+//       status: 'success',
+//       data: {
+//         data: doc[1], // return the updated document
+//       },
+//     });
+//   });
+
+exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.update(req.body, {
-      where: { [idField]: req.params.id }, // Use the dynamic ID field
-      returning: true, // returns the updated object(s) in an array
-      plain: true, // makes sure that only the object itself is returned
+    const { id } = req.params;
+    const updates = req.body;
+
+    // Find and update the record
+    const [affectedRows, [updatedDoc]] = await Model.update(updates, {
+      where: { id },
+      returning: true, // Return the updated document
+      plain: true, // Return a single instance
     });
 
-    if (!doc[1]) {
-      // doc[1] contains the updated object, if any
-      return next(new AppError(`No document found with that ${idField}`, 404));
+    if (affectedRows === 0) {
+      return next(new AppError('No document found with that ID', 404));
     }
 
     res.status(200).json({
       status: 'success',
       data: {
-        data: doc[1], // return the updated document
+        data: updatedDoc,
       },
     });
   });

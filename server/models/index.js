@@ -70,81 +70,81 @@ const models = {
 
 // User Role student
 models.User.hasOne(models.Student, {
-  foreignKey: 'userId',
+  foreignKey: 'user_id',
   as: 'StudentProfile',
 });
 models.Student.belongsTo(models.User, {
-  foreignKey: 'userId',
+  foreignKey: 'user_id',
   as: 'User',
 });
 // User Role teacher
 models.User.hasOne(models.Teacher, {
-  foreignKey: 'userId',
+  foreignKey: 'user_id',
   as: 'TeacherProfile',
 });
 models.Teacher.belongsTo(models.User, {
-  foreignKey: 'userId',
+  foreignKey: 'user_id',
   as: 'User',
 });
 // User Role admin
 models.User.hasOne(models.Admin, {
-  foreignKey: 'userId',
+  foreignKey: 'user_id',
   as: 'AdminProfile',
 });
 models.Admin.belongsTo(models.User, {
-  foreignKey: 'userId',
+  foreignKey: 'user_id',
   as: 'User',
 });
 
 // Admin-Teacher Relationship
 models.Admin.hasMany(models.Teacher, {
-  foreignKey: 'adminId',
+  foreignKey: 'admin_id',
   as: 'Teachers',
 });
 models.Teacher.belongsTo(models.Admin, {
-  foreignKey: 'adminId',
+  foreignKey: 'admin_id',
   as: 'Admin',
 });
 
 // A teacher checks many attendance records
 models.Teacher.hasMany(models.Attendance, {
-  foreignKey: 'teacherId',
+  foreignKey: 'teacher_id',
   as: 'CheckedAttendances',
 });
 models.Attendance.belongsTo(models.Teacher, {
-  foreignKey: 'teacherId',
+  foreignKey: 'teacher_id',
   as: 'CheckedBy',
 });
 
 // A student has many attendance records
 models.Student.hasMany(models.Attendance, {
-  foreignKey: 'studentId',
+  foreignKey: 'student_id',
   as: 'Attendances',
 });
 models.Attendance.belongsTo(models.Student, {
-  foreignKey: 'studentId',
+  foreignKey: 'student_id',
   as: 'Student',
 });
 
 // Class-Student Relationship
 models.Class.hasMany(models.Student, {
-  foreignKey: 'classId',
+  foreignKey: 'class_id',
   as: 'Students',
 });
 models.Student.belongsTo(models.Class, {
-  foreignKey: 'classId',
+  foreignKey: 'class_id',
   as: 'Class',
 });
 
 // Subject-Class Relationship
 models.Subject.belongsToMany(models.Class, {
   through: 'ClassSubjects',
-  foreignKey: 'subjectId',
+  foreignKey: 'subject_id',
   as: 'Classes',
 });
 models.Class.belongsToMany(models.Subject, {
   through: 'ClassSubjects',
-  foreignKey: 'classId',
+  foreignKey: 'class_id',
   as: 'Subjects',
 });
 

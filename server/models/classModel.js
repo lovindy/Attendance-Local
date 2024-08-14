@@ -1,18 +1,22 @@
 module.exports = (sequelize, DataTypes) => {
-  const Class = sequelize.define('classes', {
-    class_id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
+  const Class = sequelize.define(
+    'classes',
+    {
+      class_id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING,
+      },
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING,
-    },
-  });
+    { timestamps: true, underscored: true }
+  );
 
   return Class;
 };

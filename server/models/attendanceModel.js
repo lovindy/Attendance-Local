@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: 'attendances', // Ensure the table name matches your database schema
       timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
+      underscored: true, // Converts field names to snake_case for consistency with your database schema
     }
   );
 
