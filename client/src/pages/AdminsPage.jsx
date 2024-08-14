@@ -18,7 +18,11 @@ const AdminsPage = () => {
     <div>
       <h1>Admins</h1>
       {admins.map((admin) => (
-        <AdminCard key={admin.id} admin={admin} />
+        <div key={admin.id}>
+          <AdminCard admin={admin} />
+          <p>Name: {admin.name}</p>
+          <p>Email: {admin.email}</p>
+        </div>
       ))}
     </div>
   );

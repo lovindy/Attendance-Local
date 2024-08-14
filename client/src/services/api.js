@@ -68,7 +68,7 @@
 
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = 'http://localhost:8000/api/v1';
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -128,6 +128,8 @@ const updateStudent = (id, student) => putRequest(`/students/${id}`, student);
 const deleteStudent = (id) => deleteRequest(`/students/${id}`);
 
 // Attendance API
+const getStudentsWithAttendance = (attendance) =>
+  getRequest('/attendance/students', attendance);
 const recordAttendance = (attendance) => postRequest('/attendance', attendance);
 const updateAttendance = (id, attendance) =>
   putRequest(`/attendance/${id}`, attendance);
@@ -159,6 +161,7 @@ export default {
   deleteStudent,
 
   // Attendance
+  getStudentsWithAttendance,
   recordAttendance,
   updateAttendance,
   deleteAttendance,
