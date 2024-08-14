@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
     'Student',
     {
       student_id: {
-        // Ensure primary key matches association
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,

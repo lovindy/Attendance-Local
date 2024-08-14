@@ -1,3 +1,5 @@
+const { Sequelize } = require('sequelize');
+
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
@@ -20,6 +22,7 @@ class APIFeatures {
       }
     });
 
+    console.log('Filters:', filters); // Debug log
     this.options.where = filters;
 
     return this;
@@ -35,6 +38,7 @@ class APIFeatures {
       this.options.order = [['createdAt', 'DESC']];
     }
 
+    console.log('Sort Order:', this.options.order); // Debug log
     return this;
   }
 
@@ -43,9 +47,10 @@ class APIFeatures {
       const fields = this.queryString.fields.split(',');
       this.options.attributes = fields;
     } else {
-      this.options.attributes = { exclude: ['__v'] };
+      this.options.attributes = { exclude: ['__v'] }; // Assuming '__v' is relevant
     }
 
+    console.log('Fields:', this.options.attributes); // Debug log
     return this;
   }
 
@@ -57,11 +62,19 @@ class APIFeatures {
     this.options.limit = limit;
     this.options.offset = offset;
 
+    console.log('Pagination:', { limit, offset }); // Debug log
     return this;
   }
 
   async exec() {
-    return await this.query.findAll(this.options);
+    try {
+      const result = await this.query.findAll(this.options);
+      console.log('Result:', result); // Debug log
+      return result;
+    } catch (err) {
+      console.error('Error executing query:', err); // Debug log for errors
+      throw err;
+    }
   }
 }
 

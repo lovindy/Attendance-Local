@@ -42,6 +42,7 @@
 
 // module.exports = db;
 
+// Import sequelize and database
 const Sequelize = require('sequelize');
 const sequelize = require('../config/database');
 
@@ -66,7 +67,8 @@ const models = {
 };
 
 // Define relationships
-// User Role Relationships
+
+// User Role student
 models.User.hasOne(models.Student, {
   foreignKey: 'userId',
   as: 'StudentProfile',
@@ -75,7 +77,7 @@ models.Student.belongsTo(models.User, {
   foreignKey: 'userId',
   as: 'User',
 });
-
+// User Role teacher
 models.User.hasOne(models.Teacher, {
   foreignKey: 'userId',
   as: 'TeacherProfile',
@@ -84,7 +86,7 @@ models.Teacher.belongsTo(models.User, {
   foreignKey: 'userId',
   as: 'User',
 });
-
+// User Role admin
 models.User.hasOne(models.Admin, {
   foreignKey: 'userId',
   as: 'AdminProfile',
