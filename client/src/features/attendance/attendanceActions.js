@@ -1,15 +1,15 @@
 // src/features/attendance/attendanceActions.js
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   recordAttendance,
   updateAttendance,
   deleteAttendance,
   fetchAttendance,
-} from "../../services/api";
+} from '../../services/api';
 
 // Fetch all attendance records
 export const fetchAttendanceRecords = createAsyncThunk(
-  "attendance/fetchAttendanceRecords",
+  'attendance/fetchAttendanceRecords',
   async () => {
     const response = await fetchAttendance();
     return response.data;
@@ -18,7 +18,7 @@ export const fetchAttendanceRecords = createAsyncThunk(
 
 // Record new attendance
 export const createAttendanceRecord = createAsyncThunk(
-  "attendance/createAttendanceRecord",
+  'attendance/createAttendanceRecord',
   async (attendance) => {
     const response = await recordAttendance(attendance);
     return response.data;
@@ -27,7 +27,7 @@ export const createAttendanceRecord = createAsyncThunk(
 
 // Update existing attendance
 export const modifyAttendanceRecord = createAsyncThunk(
-  "attendance/modifyAttendanceRecord",
+  'attendance/modifyAttendanceRecord',
   async ({ id, attendance }) => {
     const response = await updateAttendance(id, attendance);
     return response.data;
@@ -36,7 +36,7 @@ export const modifyAttendanceRecord = createAsyncThunk(
 
 // Delete an attendance record
 export const removeAttendanceRecord = createAsyncThunk(
-  "attendance/removeAttendanceRecord",
+  'attendance/removeAttendanceRecord',
   async (id) => {
     await deleteAttendance(id);
     return id;

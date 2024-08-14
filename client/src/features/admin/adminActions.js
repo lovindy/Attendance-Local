@@ -1,15 +1,15 @@
 // src/features/admin/adminActions.js
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   fetchAdmins,
   createAdmin,
   updateAdmin,
   deleteAdmin,
-} from "../../services/api";
+} from '../../services/api';
 
 // Fetch all admins
 export const fetchAdminRecords = createAsyncThunk(
-  "admin/fetchAdminRecords",
+  'admin/fetchAdminRecords',
   async () => {
     const response = await fetchAdmins();
     return response.data;
@@ -18,7 +18,7 @@ export const fetchAdminRecords = createAsyncThunk(
 
 // Create new admin
 export const createAdminRecord = createAsyncThunk(
-  "admin/createAdminRecord",
+  'admin/createAdminRecord',
   async (admin) => {
     const response = await createAdmin(admin);
     return response.data;
@@ -27,7 +27,7 @@ export const createAdminRecord = createAsyncThunk(
 
 // Update existing admin
 export const modifyAdminRecord = createAsyncThunk(
-  "admin/modifyAdminRecord",
+  'admin/modifyAdminRecord',
   async ({ id, admin }) => {
     const response = await updateAdmin(id, admin);
     return response.data;
@@ -36,7 +36,7 @@ export const modifyAdminRecord = createAsyncThunk(
 
 // Delete an admin record
 export const removeAdminRecord = createAsyncThunk(
-  "admin/removeAdminRecord",
+  'admin/removeAdminRecord',
   async (id) => {
     await deleteAdmin(id);
     return id;
