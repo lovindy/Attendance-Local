@@ -5,6 +5,15 @@ import {
   selectAttendanceError,
   selectAttendanceLoading,
 } from '../../features/attendance/attendanceSelectors';
+import {
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Button,
+  Box,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 
 const AttendanceForm = () => {
   const [date, setDate] = useState('');
@@ -38,47 +47,60 @@ const AttendanceForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-      <div>
-        <label>Date:</label>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Student ID:</label>
-        <input
-          type="number"
-          value={studentId}
-          onChange={(e) => setStudentId(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Teacher ID:</label>
-        <input
-          type="number"
-          value={teacherId}
-          onChange={(e) => setTeacherId(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Present:</label>
-        <input
-          type="checkbox"
-          checked={present}
-          onChange={(e) => setPresent(e.target.checked)}
-        />
-      </div>
-      <button type="submit" disabled={loading}>
-        {loading ? 'Submitting...' : 'Submit Attendance'}
-      </button>
-    </form>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ maxWidth: 400, margin: 'auto', padding: 2 }}
+    >
+      {error && <Typography color="error">Error: {error}</Typography>}
+      <TextField
+        label="Date"
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        fullWidth
+        required
+        InputLabelProps={{ shrink: true }}
+        sx={{ mb: 2 }}
+      />
+      <TextField
+        label="Student ID"
+        type="number"
+        value={studentId}
+        onChange={(e) => setStudentId(e.target.value)}
+        fullWidth
+        required
+        sx={{ mb: 2 }}
+      />
+      <TextField
+        label="Teacher ID"
+        type="number"
+        value={teacherId}
+        onChange={(e) => setTeacherId(e.target.value)}
+        fullWidth
+        required
+        sx={{ mb: 2 }}
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={present}
+            onChange={(e) => setPresent(e.target.checked)}
+          />
+        }
+        label="Present"
+        sx={{ mb: 2 }}
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        disabled={loading}
+        fullWidth
+      >
+        {loading ? <CircularProgress size={24} /> : 'Submit Attendance'}
+      </Button>
+    </Box>
   );
 };
 
