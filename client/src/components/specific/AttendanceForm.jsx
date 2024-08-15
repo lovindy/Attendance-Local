@@ -1,10 +1,17 @@
+// Libraries
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAttendanceRecord } from '../../features/attendance/attendanceSlice';
+
+// Slices
+import  createAttendanceRecord from '../../features/attendance/attendanceSlice';
+
+// Selectors
 import {
   selectAttendanceError,
   selectAttendanceLoading,
 } from '../../features/attendance/attendanceSelectors';
+
+// MUI
 import {
   TextField,
   Checkbox,

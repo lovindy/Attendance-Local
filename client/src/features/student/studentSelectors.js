@@ -4,7 +4,9 @@
 export const selectStudentState = (state) => state.student;
 
 // Select all student records
-export const selectAllStudentRecords = (state) => state.student.studentRecords;
+export const selectAllStudentRecords = (state) => state.student.data;
+
+// export const selectAllStudentRecords = (state) => state.student.data;
 
 // Select a specific student record by ID
 export const selectStudentById = (state, id) =>

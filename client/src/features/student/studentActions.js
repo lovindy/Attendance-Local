@@ -1,44 +1,40 @@
 // src/features/student/studentActions.js
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  fetchStudents,
-  createStudent,
-  updateStudent,
-  deleteStudent,
-} from "../../services/api";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../../services/api';
 
 // Fetch all students
 export const fetchStudentRecords = createAsyncThunk(
-  "student/fetchStudentRecords",
+  'student/fetchStudentRecords',
   async () => {
-    const response = await fetchStudents();
+    const response = await api.fetchStudents();
+    console.log('API Response:', response); // Add this line
     return response.data;
   }
 );
 
 // Create new student
 export const createStudentRecord = createAsyncThunk(
-  "student/createStudentRecord",
+  'student/createStudentRecord',
   async (student) => {
-    const response = await createStudent(student);
+    const response = await api.createStudent(student);
     return response.data;
   }
 );
 
 // Update existing student
 export const modifyStudentRecord = createAsyncThunk(
-  "student/modifyStudentRecord",
+  'student/modifyStudentRecord',
   async ({ id, student }) => {
-    const response = await updateStudent(id, student);
+    const response = await api.updateStudent(id, student);
     return response.data;
   }
 );
 
 // Delete a student record
 export const removeStudentRecord = createAsyncThunk(
-  "student/removeStudentRecord",
+  'student/removeStudentRecord',
   async (id) => {
-    await deleteStudent(id);
+    await api.deleteStudent(id);
     return id;
   }
 );

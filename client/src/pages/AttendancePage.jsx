@@ -1,14 +1,6 @@
-// import React, { useEffect, useState } from "react";
-// import {
-//   fetchStudents,
-//   createStudent,
-//   updateStudent,
-//   deleteStudent,
-//   recordAttendance,
-//   updateAttendance,
-//   deleteAttendance,
-// } from "../services/api";
-// import AttendanceTable from "../components/specific/AttendanceTable";
+// import React, { useEffect, useState } from 'react';
+// import api from '../services/api';
+// import AttendanceTable from '../components/specific/AttendanceTable';
 
 // const AttendancePage = () => {
 //   const [students, setStudents] = useState([]);
@@ -17,7 +9,7 @@
 //   useEffect(() => {
 //     const fetchData = async () => {
 //       try {
-//         const response = await fetchStudents();
+//         const response = await api.fetchStudents();
 //         setStudents(response.data);
 //         const records = response.data.reduce((acc, student) => {
 //           student.Attendances.forEach((attendance) => {
@@ -30,7 +22,7 @@
 //         }, {});
 //         setAttendanceRecords(records);
 //       } catch (error) {
-//         console.error("Error fetching data:", error);
+//         console.error('Error fetching data:', error);
 //       }
 //     };
 
@@ -39,34 +31,34 @@
 
 //   const handleAddStudent = async (student) => {
 //     try {
-//       const response = await createStudent(student);
+//       const response = await api.createStudent(student);
 //       setStudents([...students, response.data]);
 //     } catch (error) {
-//       console.error("Error adding student:", error);
+//       console.error('Error adding student:', error);
 //     }
 //   };
 
 //   const handleUpdateStudent = async (id, student) => {
 //     try {
-//       const response = await updateStudent(id, student);
+//       const response = await api.updateStudent(id, student);
 //       setStudents(students.map((s) => (s.id === id ? response.data : s)));
 //     } catch (error) {
-//       console.error("Error updating student:", error);
+//       console.error('Error updating student:', error);
 //     }
 //   };
 
 //   const handleDeleteStudent = async (id) => {
 //     try {
-//       await deleteStudent(id);
+//       await api.deleteStudent(id);
 //       setStudents(students.filter((s) => s.id !== id));
 //     } catch (error) {
-//       console.error("Error deleting student:", error);
+//       console.error('Error deleting student:', error);
 //     }
 //   };
 
 //   const handleRecordAttendance = async (attendance) => {
 //     try {
-//       const response = await recordAttendance(attendance);
+//       const response = await api.recordAttendance(attendance);
 //       const { date, studentId, present } = response.data;
 //       setAttendanceRecords({
 //         ...attendanceRecords,
@@ -76,13 +68,13 @@
 //         },
 //       });
 //     } catch (error) {
-//       console.error("Error recording attendance:", error);
+//       console.error('Error recording attendance:', error);
 //     }
 //   };
 
 //   const handleUpdateAttendance = async (id, attendance) => {
 //     try {
-//       const response = await updateAttendance(id, attendance);
+//       const response = await api.updateAttendance(id, attendance);
 //       const { date, studentId, present } = response.data;
 //       setAttendanceRecords({
 //         ...attendanceRecords,
@@ -92,13 +84,13 @@
 //         },
 //       });
 //     } catch (error) {
-//       console.error("Error updating attendance:", error);
+//       console.error('Error updating attendance:', error);
 //     }
 //   };
 
 //   const handleDeleteAttendance = async (id) => {
 //     try {
-//       await deleteAttendance(id);
+//       await api.deleteAttendance(id);
 //       const updatedRecords = { ...attendanceRecords };
 //       for (const date in updatedRecords) {
 //         delete updatedRecords[date][id];
@@ -108,7 +100,7 @@
 //       }
 //       setAttendanceRecords(updatedRecords);
 //     } catch (error) {
-//       console.error("Error deleting attendance:", error);
+//       console.error('Error deleting attendance:', error);
 //     }
 //   };
 
@@ -135,7 +127,7 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAttendance } from '../features/attendance/attendanceSlice';
+import { fetchAttendanceRecords } from '../features/attendance/attendanceActions';
 import AttendanceTable from '../components/specific/AttendanceTable';
 import AttendanceForm from '../components/specific/AttendanceForm';
 
@@ -146,7 +138,7 @@ const AttendancePage = () => {
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchAttendance());
+      dispatch(fetchAttendanceRecords());
     }
   }, [status, dispatch]);
 
