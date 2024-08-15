@@ -15,7 +15,11 @@ const classRoutes = require('./routes/classRoutes');
 const app = express();
 
 // Body parser
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+  })
+);
 app.use(bodyParser.json());
 
 // Routes
