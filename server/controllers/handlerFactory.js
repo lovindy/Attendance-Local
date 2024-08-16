@@ -65,9 +65,7 @@ exports.getAll = (Model, additionalFilter = {}) =>
     res.status(200).json({
       status: 'success',
       results: doc.length,
-      data: {
-        data: doc,
-      },
+      data: doc,
     });
   });
 

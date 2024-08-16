@@ -33,7 +33,7 @@ function TestPage() {
         );
         console.log('Response data:', response.data);
 
-        const teacherData = response.data.data.data;
+        const teacherData = response.data.data;
         setTeachers(teacherData);
       } catch (error) {
         console.error('Error fetching teachers:', error);
@@ -57,7 +57,7 @@ function TestPage() {
 
       // Refetch the updated list of teachers after adding a new one
       const response = await axios.get('http://localhost:8000/api/v1/teachers');
-      setTeachers(response.data.data.data); // Update the teachers state with the latest data
+      setTeachers(response.data); // Update the teachers state with the latest data
 
       // Clear form fields after successful addition
       setForm({ name: '', subject: '' });

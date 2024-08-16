@@ -7,7 +7,7 @@ export const fetchStudentRecords = createAsyncThunk(
   'student/fetchStudentRecords',
   async () => {
     const response = await api.fetchStudents();
-    console.log('API Response:', response); // Add this line
+    console.log('API Response:', response.data); // Add this line
     return response.data;
   }
 );

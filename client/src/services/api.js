@@ -13,7 +13,7 @@ const apiClient = axios.create({
 const getRequest = async (endpoint) => {
   try {
     const response = await apiClient.get(endpoint);
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error(`GET ${endpoint} failed`, error);
     throw error;
