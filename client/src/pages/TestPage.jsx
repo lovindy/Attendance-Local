@@ -3,14 +3,18 @@ import axios from 'axios';
 import {
   Container,
   Typography,
-  Card,
-  CardContent,
-  Grid,
   CircularProgress,
   TextField,
   Button,
   Snackbar,
   Alert,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from '@mui/material';
 
 function TestPage() {
@@ -49,20 +53,15 @@ function TestPage() {
 
   const handleCreate = async () => {
     try {
-      const response = await axios.post(
-        'http://localhost:8000/api/v1/teachers',
-        form
-      );
+      await axios.post('http://localhost:8000/api/v1/teachers', form);
 
-      console.log('Teacher added:', response.data);
+      // Refetch the updated list of teachers after adding a new one
+      const response = await axios.get('http://localhost:8000/api/v1/teachers');
+      setTeachers(response.data.data.data); // Update the teachers state with the latest data
 
-      if (response.data && response.data.data) {
-        // Add the new teacher to the list
-        setTeachers((prevTeachers) => [...prevTeachers, response.data.data]);
-        setSnackbarMessage('Teacher added successfully');
-      } else {
-        throw new Error('Unexpected response structure');
-      }
+      // Clear form fields after successful addition
+      setForm({ name: '', subject: '' });
+      setSnackbarMessage('Teacher added successfully');
     } catch (error) {
       console.error('Error adding teacher:', error);
       setSnackbarMessage(
@@ -122,36 +121,36 @@ function TestPage() {
         </Alert>
       </Snackbar>
 
-      <Grid container spacing={2} marginTop={2}>
-        {teachers.length > 0 ? (
-          teachers.map((teacher, index) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              key={teacher.id || `${teacher.name}-${index}`}
-            >
-              <Card>
-                <CardContent>
-                  <Typography variant="h6">{teacher.name}</Typography>
-                  <Typography color="textSecondary">
-                    Subject: {teacher.subject}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    CreatedAt: {teacher.createdAt}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    UpdatedAt: {teacher.updatedAt}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))
-        ) : (
-          <Typography>No teachers found or data is not an array</Typography>
-        )}
-      </Grid>
+      {teachers.length > 0 ? (
+        <TableContainer component={Paper} sx={{ marginTop: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Subject</TableCell>
+                <TableCell>Created At</TableCell>
+                <TableCell>Updated At</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {teachers.map((teacher, index) => (
+                <TableRow key={teacher.id || `${teacher.name}-${index}`}>
+                  <TableCell>{teacher.name}</TableCell>
+                  <TableCell>{teacher.subject}</TableCell>
+                  <TableCell>
+                    {new Date(teacher.createdAt).toLocaleString()}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(teacher.updatedAt).toLocaleString()}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Typography>No teachers found or data is not an array</Typography>
+      )}
     </Container>
   );
 }
