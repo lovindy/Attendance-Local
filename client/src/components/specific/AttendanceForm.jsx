@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Slices
-import  createAttendanceRecord from '../../features/attendance/attendanceSlice';
+import createAttendanceRecord from '../../features/attendance/attendanceSlice';
 
 // Selectors
 import {

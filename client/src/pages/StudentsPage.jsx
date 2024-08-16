@@ -12,9 +12,9 @@ import {
   TextField,
 } from '@mui/material';
 
-const Students = () => {
+const StudentsPage = () => {
   const [students, setStudents] = useState([]);
-  const [newStudent, setNewStudent] = useState({ name: '', id: '' });
+  const [newStudent, setNewStudent] = useState({ name: '', student_id: '' });
   const [editStudent, setEditStudent] = useState(null);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const Students = () => {
   const handleCreateStudent = async () => {
     try {
       await api.createStudent(newStudent);
-      setNewStudent({ name: '', id: '' });
+      setNewStudent({ name: '', student_id: '' });
       fetchStudents();
     } catch (error) {
       console.error('Failed to create student:', error);
@@ -43,68 +43,31 @@ const Students = () => {
   const handleUpdateStudent = async () => {
     if (editStudent) {
       try {
-        await api.updateStudent(editStudent.id, editStudent);
+        const response = await api.updateStudent(editStudent.student_id, {
+          name: editStudent.name,
+          student_id: editStudent.student_id,
+        });
+        console.log('Update response:', response);
         setEditStudent(null);
         fetchStudents();
       } catch (error) {
         console.error('Failed to update student:', error);
+        console.log(error.response?.data);
       }
     }
   };
 
   const handleDeleteStudent = async (id) => {
     try {
-      if (id) {
-        await api.deleteStudent(id);
-        fetchStudents();
-      } else {
-        console.error('No student id provided');
-      }
+      await api.deleteStudent(id);
+      fetchStudents(); // Fetch students again to update the list
     } catch (error) {
-      console.error('Failed to delete student:', error);
+      console.error('Error deleting student:', error);
     }
   };
 
   return (
     <div>
-      <h1>Student List</h1>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>ID</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {students.map((student, index) => (
-              <TableRow key={index}>
-                <TableCell>{student.name}</TableCell>
-                <TableCell>{student.id}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setEditStudent(student)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleDeleteStudent(student.id)}
-                    style={{ marginLeft: '8px' }}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
       <h2>Add New Student</h2>
       <TextField
         label="Name"
@@ -117,13 +80,57 @@ const Students = () => {
         label="Age"
         type="number"
         variant="outlined"
-        value={newStudent.age}
-        onChange={(e) => setNewStudent({ ...newStudent, age: e.target.value })}
+        value={newStudent.student_id}
+        onChange={(e) =>
+          setNewStudent({ ...newStudent, student_id: e.target.value })
+        }
         style={{ marginRight: '8px' }}
       />
       <Button variant="contained" color="primary" onClick={handleCreateStudent}>
         Add Student
       </Button>
+
+      <h1>Student List</h1>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>ID</TableCell>
+              <TableCell>CreatedAt</TableCell>
+              <TableCell>UpdatedAt</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {students.map((student, index) => (
+              <TableRow key={index}>
+                <TableCell>{student.name}</TableCell>
+                <TableCell>{student.student_id}</TableCell>
+                <TableCell>{student.createdAt}</TableCell>
+                <TableCell>{student.updatedAt}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setEditStudent(student)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDeleteStudent(student.student_id)}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {editStudent && (
         <div>
@@ -141,9 +148,9 @@ const Students = () => {
             label="Age"
             type="number"
             variant="outlined"
-            value={editStudent.age}
+            value={editStudent.student_id}
             onChange={(e) =>
-              setEditStudent({ ...editStudent, age: e.target.value })
+              setEditStudent({ ...editStudent, student_id: e.target.value })
             }
             style={{ marginRight: '8px' }}
           />
@@ -168,4 +175,4 @@ const Students = () => {
   );
 };
 
-export default Students;
+export default StudentsPage;

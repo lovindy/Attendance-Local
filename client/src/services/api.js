@@ -10,9 +10,20 @@ const apiClient = axios.create({
 });
 
 // Generic function for GET requests
-const getRequest = async (endpoint) => {
+// const getRequest = async (endpoint) => {
+//   try {
+//     const response = await apiClient.get(endpoint);
+//     return response.data.data;
+//   } catch (error) {
+//     console.error(`GET ${endpoint} failed`, error);
+//     throw error;
+//   }
+// };
+
+const getRequest = async (endpoint, params = {}) => {
   try {
-    const response = await apiClient.get(endpoint);
+    const response = await apiClient.get(endpoint, { params });
+    console.log('GET response data:', response.data); // Debugging line
     return response.data.data;
   } catch (error) {
     console.error(`GET ${endpoint} failed`, error);
@@ -43,10 +54,26 @@ const putRequest = async (endpoint, data) => {
 };
 
 // Generic function for DELETE requests
+// const deleteRequest = async (endpoint) => {
+//   try {
+//     const response = await apiClient.delete(endpoint);
+//     return response.data;
+//   } catch (error) {
+//     console.error(`DELETE ${endpoint} failed`, error);
+//     throw error;
+//   }
+// };
+
 const deleteRequest = async (endpoint) => {
   try {
     const response = await apiClient.delete(endpoint);
-    return response.data;
+    console.log('DELETE response:', response);
+    // Check if deletion was successful based on status or a message
+    if (response.status === 200) {
+      return 'Item deleted successfully';
+    } else {
+      return 'Deletion failed';
+    }
   } catch (error) {
     console.error(`DELETE ${endpoint} failed`, error);
     throw error;
