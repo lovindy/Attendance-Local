@@ -1,7 +1,6 @@
 // server.js
 const sequelize = require('./config/database');
 const app = require('./app');
-const cors = require('cors');
 require('dotenv').config();
 
 // Define port
