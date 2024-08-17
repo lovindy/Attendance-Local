@@ -77,7 +77,7 @@ const StudentsPage = () => {
         style={{ marginRight: '8px' }}
       />
       <TextField
-        label="Age"
+        label="Student ID"
         type="number"
         variant="outlined"
         value={newStudent.student_id}
@@ -96,7 +96,9 @@ const StudentsPage = () => {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell>ID</TableCell>
+              <TableCell>Student ID</TableCell>
+              <TableCell>Class ID</TableCell>
+              <TableCell>User ID</TableCell>
               <TableCell>CreatedAt</TableCell>
               <TableCell>UpdatedAt</TableCell>
               <TableCell>Actions</TableCell>
@@ -107,6 +109,8 @@ const StudentsPage = () => {
               <TableRow key={index}>
                 <TableCell>{student.name}</TableCell>
                 <TableCell>{student.student_id}</TableCell>
+                <TableCell>{student.class_id}</TableCell>
+                <TableCell>{student.user_id}</TableCell>
                 <TableCell>{student.createdAt}</TableCell>
                 <TableCell>{student.updatedAt}</TableCell>
                 <TableCell>
@@ -145,7 +149,7 @@ const StudentsPage = () => {
             style={{ marginRight: '8px' }}
           />
           <TextField
-            label="Age"
+            label="Student ID"
             type="number"
             variant="outlined"
             value={editStudent.student_id}
