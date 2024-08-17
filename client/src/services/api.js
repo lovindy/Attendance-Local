@@ -10,16 +10,6 @@ const apiClient = axios.create({
 });
 
 // Generic function for GET requests
-// const getRequest = async (endpoint) => {
-//   try {
-//     const response = await apiClient.get(endpoint);
-//     return response.data.data;
-//   } catch (error) {
-//     console.error(`GET ${endpoint} failed`, error);
-//     throw error;
-//   }
-// };
-
 const getRequest = async (endpoint, params = {}) => {
   try {
     const response = await apiClient.get(endpoint, { params });
@@ -52,17 +42,6 @@ const putRequest = async (endpoint, data) => {
     throw error;
   }
 };
-
-// Generic function for DELETE requests
-// const deleteRequest = async (endpoint) => {
-//   try {
-//     const response = await apiClient.delete(endpoint);
-//     return response.data;
-//   } catch (error) {
-//     console.error(`DELETE ${endpoint} failed`, error);
-//     throw error;
-//   }
-// };
 
 const deleteRequest = async (endpoint) => {
   try {
