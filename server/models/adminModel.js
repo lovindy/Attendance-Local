@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Admin = sequelize.define(
-    'admins',
+    'Admin',
     {
       admin_id: {
         type: DataTypes.INTEGER,
@@ -17,8 +17,19 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
     },
-    { timestamps: true, underscored: true }
+    {
+      tableName: 'admins',
+      timestamps: true,
+      underscored: true,
+    }
   );
+
+  Admin.associate = (models) => {
+    Admin.hasMany(models.Teacher, {
+      foreignKey: 'admin_id',
+      as: 'Teachers',
+    });
+  };
 
   return Admin;
 };

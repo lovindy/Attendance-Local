@@ -17,11 +17,22 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: 'attendances', // Ensure the table name matches your database schema
-      timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
-      underscored: true, // Converts field names to snake_case for consistency with your database schema
+      tableName: 'attendances',
+      timestamps: true,
+      underscored: true,
     }
   );
+
+  Attendance.associate = (models) => {
+    Attendance.belongsTo(models.Teacher, {
+      foreignKey: 'teacher_id',
+      as: 'CheckedBy',
+    });
+    Attendance.belongsTo(models.Student, {
+      foreignKey: 'student_id',
+      as: 'Student',
+    });
+  };
 
   return Attendance;
 };

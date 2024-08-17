@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Class = sequelize.define(
-    'classes',
+    'Class',
     {
       class_id: {
         type: DataTypes.INTEGER,
@@ -15,8 +15,24 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
     },
-    { timestamps: true, underscored: true }
+    {
+      tableName: 'classes',
+      timestamps: true,
+      underscored: true,
+    }
   );
+
+  Class.associate = (models) => {
+    Class.hasMany(models.Student, {
+      foreignKey: 'class_id',
+      as: 'Students',
+    });
+    Class.belongsToMany(models.Subject, {
+      through: 'ClassSubjects',
+      foreignKey: 'class_id',
+      as: 'Subjects',
+    });
+  };
 
   return Class;
 };

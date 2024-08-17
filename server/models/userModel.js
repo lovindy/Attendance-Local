@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    'users',
+    'User',
     {
       user_id: {
         type: DataTypes.INTEGER,
@@ -31,6 +31,21 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  User.associate = (models) => {
+    User.hasOne(models.Student, {
+      foreignKey: 'user_id',
+      as: 'StudentProfile',
+    });
+    User.hasOne(models.Teacher, {
+      foreignKey: 'user_id',
+      as: 'TeacherProfile',
+    });
+    User.hasOne(models.Admin, {
+      foreignKey: 'user_id',
+      as: 'AdminProfile',
+    });
+  };
 
   return User;
 };
