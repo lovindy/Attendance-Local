@@ -4,7 +4,7 @@ import {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
-} from '../services/userApi';
+} from '../services/usersApi';
 import {
   Box,
   Table,
@@ -31,6 +31,16 @@ function UsersPage() {
   // Extract users from the data response
   const users = data?.data || [];
 
+  // Handle input changes
+  const handleChange = (field, value) => {
+    if (editingUser) {
+      setEditingUser({ ...editingUser, [field]: value });
+    } else {
+      setNewUser({ ...newUser, [field]: value });
+    }
+  };
+
+  // Handle Create
   const handleCreateUser = async () => {
     try {
       await createUser(newUser).unwrap();
@@ -40,6 +50,7 @@ function UsersPage() {
     }
   };
 
+  // Handle Update
   const handleUpdateUser = async () => {
     try {
       await updateUser(editingUser).unwrap();
@@ -58,6 +69,7 @@ function UsersPage() {
     }
   };
 
+  // Handle Delete
   const handleDeleteUser = async (id) => {
     try {
       await deleteUser(id).unwrap();
@@ -77,7 +89,7 @@ function UsersPage() {
   return (
     <div>
       <h2>{editingUser ? 'Edit User' : 'Add User'}</h2>
-      {/* Form for the input field */}
+      {/* Form for the input fields */}
       <Box
         component="form"
         sx={{
@@ -149,7 +161,12 @@ function UsersPage() {
                   <TableCell>
                     {new Date(user.updatedAt).toLocaleString()}
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      display: 'flex',
+                      gap: 1,
+                    }}
+                  >
                     <Button
                       variant="contained"
                       color="primary"
