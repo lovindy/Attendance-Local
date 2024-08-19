@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const usersApi = createApi({
+export const usersApi = createApi({
   reducerPath: 'usersApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/api/v1' }),
   tagTypes: ['Users'],
@@ -19,7 +19,7 @@ const usersApi = createApi({
     }),
     updateUser: builder.mutation({
       query: (user) => ({
-        url: `/users/${user.id}`,
+        url: `/users/${user.user_id}`,
         method: 'PUT',
         body: user,
       }),
@@ -35,12 +35,9 @@ const usersApi = createApi({
   }),
 });
 
-// Export hooks for components
 export const {
   useFetchUsersQuery,
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
 } = usersApi;
-
-export { usersApi };

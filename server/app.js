@@ -26,12 +26,15 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send('Welcome to the School API');
 });
-app.use('/api/v1/attendance', attendanceRoutes);
-app.use('/api/v1/classes', classRoutes);
+// User Relationship Routes
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/teachers', teacherRoutes);
 app.use('/api/v1/students', studentRoutes);
 app.use('/api/v1/admins', adminRoutes);
+
+// Function Routes
+app.use('/api/v1/attendance', attendanceRoutes);
+app.use('/api/v1/classes', classRoutes);
 
 // Export app
 module.exports = app;

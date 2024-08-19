@@ -71,25 +71,32 @@ exports.getAll = (Model, additionalFilter = {}) =>
 
 exports.updateOne = (Model, idField) =>
   catchAsync(async (req, res, next) => {
-    const { id } = req.params;
-    const updates = req.body;
+    try {
+      const { id } = req.params;
+      const updates = req.body;
 
-    // Find and update the record
-    const affectedRows = await Model.update(updates, {
-      where: { [idField]: id },
-    });
+      // Update the record
+      const [affectedRows] = await Model.update(updates, {
+        where: { [idField]: id },
+      });
 
-    if (affectedRows[0] === 0) {
-      return next(new AppError(`No document found with that ${idField}`, 404));
+      if (affectedRows === 0) {
+        return next(
+          new AppError(`No document found with that ${idField}`, 404)
+        );
+      }
+
+      // Fetch the updated document
+      const updatedDoc = await Model.findOne({ where: { [idField]: id } });
+
+      res.status(200).json({
+        status: 'success',
+        data: updatedDoc,
+      });
+    } catch (err) {
+      // Return a JSON error response
+      next(new AppError('Server error, please try again later.', 500));
     }
-
-    // Fetch the updated document
-    const updatedDoc = await Model.findOne({ where: { [idField]: id } });
-
-    res.status(200).json({
-      status: 'success',
-      data: updatedDoc,
-    });
   });
 
 exports.deleteOne = (Model, idField) =>
