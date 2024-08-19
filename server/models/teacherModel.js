@@ -27,14 +27,17 @@ module.exports = (sequelize, DataTypes) => {
     Teacher.belongsTo(models.User, {
       foreignKey: 'user_id',
       as: 'User',
+      onDelete: 'CASCADE',
     });
     Teacher.belongsTo(models.Admin, {
       foreignKey: 'admin_id',
       as: 'Admin',
+      onDelete: 'CASCADE',
     });
     Teacher.hasMany(models.Attendance, {
       foreignKey: 'teacher_id',
       as: 'CheckedAttendances',
+      onDelete: 'CASCADE',
     });
   };
 
