@@ -10,13 +10,11 @@ import AdminsPage from './pages/AdminsPage';
 import UsersPage from './pages/UsersPage';
 import TestPage from './pages/TestPage';
 // Common Components
-import Navbar from './components/common/NavBar';
-import Header from './components/layout/Header';
+import Navbar from './components/layout/Header';
 import Footer from './components/layout/Footer';
 
 const App = () => (
   <>
-    <Header />
     <Navbar />
     <Routes>
       <Route path="/" element={<DashboardPage />} />

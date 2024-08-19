@@ -10,6 +10,7 @@ import {
   Paper,
   Button,
   TextField,
+  Box,
 } from '@mui/material';
 
 const StudentsPage = () => {
@@ -68,27 +69,49 @@ const StudentsPage = () => {
 
   return (
     <div>
-      <h2>Add New Student</h2>
-      <TextField
-        label="Name"
-        variant="outlined"
-        value={newStudent.name}
-        onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
-        style={{ marginRight: '8px' }}
-      />
-      <TextField
-        label="Student ID"
-        type="number"
-        variant="outlined"
-        value={newStudent.student_id}
-        onChange={(e) =>
-          setNewStudent({ ...newStudent, student_id: e.target.value })
-        }
-        style={{ marginRight: '8px' }}
-      />
-      <Button variant="contained" color="primary" onClick={handleCreateStudent}>
-        Add Student
-      </Button>
+      <h1>Add New Student</h1>
+      {/* Form for the input fields */}
+      <Box
+        component="form"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          maxWidth: 400,
+          margin: 'auto',
+          padding: 2,
+          backgroundColor: '#f5f5f5',
+          borderRadius: 1,
+          boxShadow: 3,
+        }}
+      >
+        <TextField
+          label="Name"
+          variant="outlined"
+          value={newStudent.name}
+          onChange={(e) =>
+            setNewStudent({ ...newStudent, name: e.target.value })
+          }
+          fullWidth
+        />
+        <TextField
+          label="Class ID"
+          type="number"
+          variant="outlined"
+          value={newStudent.class_id}
+          onChange={(e) =>
+            setNewStudent({ ...newStudent, class_id: e.target.value })
+          }
+          fullWidth
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCreateStudent}
+        >
+          Add Student
+        </Button>
+      </Box>
 
       <h1>Student List</h1>
       <TableContainer component={Paper}>
