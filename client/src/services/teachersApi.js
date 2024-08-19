@@ -5,10 +5,12 @@ export const teachersApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/api/v1' }),
   tagTypes: ['Teachers'],
   endpoints: (builder) => ({
+    // Fetch all teachers
     fetchTeachers: builder.query({
       query: () => '/teachers',
       providesTags: ['Teachers'],
     }),
+    // Create a new teacher
     createTeacher: builder.mutation({
       query: (teacher) => ({
         url: '/teachers',
@@ -17,6 +19,7 @@ export const teachersApi = createApi({
       }),
       invalidatesTags: ['Teachers'],
     }),
+    // Update an existing teacher
     updateTeacher: builder.mutation({
       query: (teacher) => ({
         url: `/teachers/${teacher.teacher_id}`,
@@ -25,6 +28,7 @@ export const teachersApi = createApi({
       }),
       invalidatesTags: ['Teachers'],
     }),
+    // Delete a teacher record
     deleteTeacher: builder.mutation({
       query: (id) => ({
         url: `/teachers/${id}`,
