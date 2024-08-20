@@ -8,6 +8,7 @@ import StudentsPage from './pages/StudentsPage';
 import TeachersPage from './pages/TeachersPage';
 import AdminsPage from './pages/AdminsPage';
 import UsersPage from './pages/UsersPage';
+import ClassPage from './pages/ClassPage';
 import TestPage from './pages/TestPage';
 // Common Components
 import Navbar from './components/layout/Header';
@@ -23,6 +24,7 @@ const App = () => (
       <Route path="/teachers" element={<TeachersPage />} />
       <Route path="/admins" element={<AdminsPage />} />
       <Route path="/users" element={<UsersPage />} />
+      <Route path="/classes" element={<ClassPage />} />
       <Route path="/test" element={<TestPage />} />
     </Routes>
     <Footer />

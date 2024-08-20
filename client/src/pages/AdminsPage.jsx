@@ -111,6 +111,14 @@ function AdminsPage() {
           onChange={(e) => handleChange('email', e.target.value)}
           fullWidth
         />
+        <TextField
+          label="User ID"
+          variant="outlined"
+          type="email"
+          value={editingAdmin ? editingAdmin.user_id : newAdmin.user_id}
+          onChange={(e) => handleChange('user_id', e.target.value)}
+          fullWidth
+        />
         <Button
           variant="contained"
           color="primary"

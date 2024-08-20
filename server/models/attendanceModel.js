@@ -11,9 +11,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATEONLY,
         allowNull: false,
       },
-      present: {
-        type: DataTypes.BOOLEAN,
+      status: {
+        type: DataTypes.ENUM(
+          'late',
+          'present',
+          'absent',
+          'absent_with_permission'
+        ),
         allowNull: false,
+        defaultValue: 'absent',
       },
     },
     {
@@ -31,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     Attendance.belongsTo(models.Student, {
       foreignKey: 'student_id',
       as: 'Student',
+    });
+    Attendance.belongsTo(models.Class, {
+      foreignKey: 'class_id',
+      as: 'Class',
     });
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CircularProgress,
   Table,
@@ -8,44 +8,55 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
   TextField,
-  Checkbox,
   IconButton,
-  Box,
 } from '@mui/material';
-import { Add, Edit, Delete } from '@mui/icons-material';
+import { Delete } from '@mui/icons-material';
 import {
   useFetchAttendanceByStudentsQuery,
-  // useCreateAttendanceMutation,
   useUpdateAttendanceMutation,
   useDeleteAttendanceMutation,
 } from '../services/attandanceApi';
 
-// Example student data mapping (could be fetched from an API)
-const students = {
-  1: 'John Doe',
-  2: 'Jane Smith',
-  3: 'Alice Johnson',
-  // Add more students here...
-};
-
 function AttendancePage() {
   const { data, error, isLoading } = useFetchAttendanceByStudentsQuery();
-  // const [createAttendance] = useCreateAttendanceMutation();
   const [updateAttendance] = useUpdateAttendanceMutation();
   const [deleteAttendance] = useDeleteAttendanceMutation();
-
-  const [newAttendance, setNewAttendance] = useState({
-    student_id: '',
-    date: new Date().toISOString().split('T')[0],
-    present: false,
-  });
   const [searchQuery, setSearchQuery] = useState('');
+  const [attendanceData, setAttendanceData] = useState([]);
 
-  const handleUpdate = async (id) => {
+  useEffect(() => {
+    if (data) {
+      setAttendanceData(data);
+    }
+  }, [data]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleTogglePresent = async (attendance) => {
     try {
-      await updateAttendance({ id, ...newAttendance }).unwrap();
+      // Toggle the 'present' status
+      const updatedAttendance = {
+        ...attendance,
+        present: !attendance.present,
+      };
+
+      // Update the attendance record in the database
+      await updateAttendance(updatedAttendance).unwrap();
+
+      // Update the local state with the new attendance status
+      setAttendanceData((prevData) =>
+        prevData.map((student) => ({
+          ...student,
+          Attendances: student.Attendances.map((att) =>
+            att.attendance_id === attendance.attendance_id
+              ? updatedAttendance
+              : att
+          ),
+        }))
+      );
     } catch (err) {
       console.error('Failed to update attendance:', err);
     }
@@ -54,17 +65,21 @@ function AttendancePage() {
   const handleDelete = async (id) => {
     try {
       await deleteAttendance(id).unwrap();
+      setAttendanceData((prevData) =>
+        prevData.map((student) => ({
+          ...student,
+          Attendances: student.Attendances.filter(
+            (att) => att.attendance_id !== id
+          ),
+        }))
+      );
     } catch (err) {
       console.error('Failed to delete attendance:', err);
     }
   };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const filteredData = data?.filter((attendance) =>
-    attendance.student_id.toString().includes(searchQuery)
+  const filteredData = attendanceData?.filter((student) =>
+    student.student_id.toString().includes(searchQuery)
   );
 
   if (isLoading) return <CircularProgress />;
@@ -94,41 +109,45 @@ function AttendancePage() {
             <TableRow>
               <TableCell>Student ID</TableCell>
               <TableCell>Student Name</TableCell>
+              <TableCell>Class</TableCell> 
               <TableCell>Date</TableCell>
-              <TableCell>Present</TableCell>
+              <TableCell>Status</TableCell> 
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredData?.map((attendance) => (
-              <TableRow
-                key={
-                  attendance.attendance_id ||
-                  `${attendance.student_id}-${attendance.date}`
-                }
-              >
-                <TableCell>{[attendance.student_id]}</TableCell>
-                <TableCell>
-                  {students[attendance.student_id] || 'Unknown Student'}
-                </TableCell>
-                <TableCell>{attendance.date}</TableCell>
-                <TableCell>
-                  <Checkbox checked={attendance.present} />
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    onClick={() => handleUpdate(attendance.attendance_id)}
-                  >
-                    <Edit />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => handleDelete(attendance.attendance_id)}
-                  >
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {filteredData?.map((student) =>
+              student.Attendances.length > 0 ? (
+                student.Attendances.map((attendance) => (
+                  <TableRow key={attendance.attendance_id}>
+                    <TableCell>{student.student_id}</TableCell>
+                    <TableCell>{student.name}</TableCell>
+                    <TableCell>
+                      {attendance.Class?.name || 'N/A'}
+                    </TableCell>
+                    {/* Display Class Name */}
+                    <TableCell>
+                      {new Date(attendance.date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>{attendance.status}</TableCell>
+                    {/* Display Attendance Status */}
+                    <TableCell>
+                      <IconButton
+                        onClick={() => handleDelete(attendance.attendance_id)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow key={student.student_id}>
+                  <TableCell>{student.student_id}</TableCell>
+                  <TableCell>{student.name}</TableCell>
+                  <TableCell colSpan={5}>No Attendance Records</TableCell>
+                </TableRow>
+              )
+            )}
           </TableBody>
         </Table>
       </TableContainer>

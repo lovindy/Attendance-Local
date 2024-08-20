@@ -13,6 +13,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(usersApi.middleware)
+      .concat(adminsApi.middleware)
       .concat(teachersApi.middleware),
 });
 

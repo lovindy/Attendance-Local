@@ -1,20 +1,43 @@
-const { Student, Attendance } = require('../models');
+const { Student, Attendance, Class } = require('../models'); // Make sure the path to your models is correct
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
 // Get all students with attendance records
+// exports.getStudentsWithAttendance = async (req, res) => {
+//   try {
+//     const students = await Student.findAll({
+//       include: [
+//         {
+//           model: Attendance,
+//           as: 'Attendances', // Use the alias specified in your associations
+//         },
+//       ],
+//     });
+//     res.json(students);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 exports.getStudentsWithAttendance = async (req, res) => {
   try {
     const students = await Student.findAll({
       include: [
         {
           model: Attendance,
-          as: 'Attendances', // Use the alias specified in your associations
+          as: 'Attendances',
+          include: [
+            {
+              model: Class, // Include the Class model
+              as: 'Class', // Make sure this alias matches your association
+            },
+          ],
         },
       ],
     });
     res.json(students);
   } catch (error) {
+    console.error('Error fetching students with attendance:', error);
     res.status(500).json({ error: error.message });
   }
 };
