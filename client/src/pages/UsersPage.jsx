@@ -25,13 +25,16 @@ function UsersPage() {
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
 
-  const [newUser, setNewUser] = useState({ name: '', email: '', role: '' });
+  const [newUser, setNewUser] = useState({
+    name: '',
+    email: '',
+    role: '',
+    password: '',
+  });
   const [editingUser, setEditingUser] = useState(null);
 
-  // Extract users from the data response
   const users = data?.data || [];
 
-  // Handle input changes
   const handleChange = (field, value) => {
     if (editingUser) {
       setEditingUser({ ...editingUser, [field]: value });
@@ -40,36 +43,26 @@ function UsersPage() {
     }
   };
 
-  // Handle Create
   const handleCreateUser = async () => {
     try {
       await createUser(newUser).unwrap();
-      setNewUser({ name: '', email: '', role: '' });
+      setNewUser({ name: '', email: '', role: '', password: '' });
     } catch (err) {
       console.error('Failed to create user:', err);
+      alert('Error creating user. Please check the required fields.');
     }
   };
 
-  // Handle Update
   const handleUpdateUser = async () => {
     try {
       await updateUser(editingUser).unwrap();
       setEditingUser(null);
     } catch (err) {
       console.error('Failed to update user:', err);
-      const statusCode = err.response?.status;
-      if (statusCode === 500) {
-        alert('Server error: Please check your input and try again.');
-      } else {
-        alert(
-          'Failed to update user: ' +
-            (err.response?.data?.message || 'Unknown error')
-        );
-      }
+      alert('Error updating user. Please check the required fields.');
     }
   };
 
-  // Handle Delete
   const handleDeleteUser = async (id) => {
     try {
       await deleteUser(id).unwrap();
@@ -89,7 +82,6 @@ function UsersPage() {
   return (
     <div>
       <h2>{editingUser ? 'Edit User' : 'Add User'}</h2>
-      {/* Form for the input fields */}
       <Box
         component="form"
         sx={{
@@ -126,6 +118,17 @@ function UsersPage() {
           onChange={(e) => handleChange('role', e.target.value)}
           fullWidth
         />
+        {/* Add password field for new user */}
+        {!editingUser && (
+          <TextField
+            label="Password"
+            variant="outlined"
+            type="password"
+            value={newUser.password}
+            onChange={(e) => handleChange('password', e.target.value)}
+            fullWidth
+          />
+        )}
         <Button
           variant="contained"
           color="primary"
@@ -161,12 +164,7 @@ function UsersPage() {
                   <TableCell>
                     {new Date(user.updatedAt).toLocaleString()}
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      display: 'flex',
-                      gap: 1,
-                    }}
-                  >
+                  <TableCell sx={{ display: 'flex', gap: 1 }}>
                     <Button
                       variant="contained"
                       color="primary"
