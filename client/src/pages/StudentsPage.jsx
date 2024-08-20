@@ -68,7 +68,7 @@ const StudentsPage = () => {
   };
 
   return (
-    <div>
+    <div className='app-component'>
       <h1>Add New Student</h1>
       {/* Form for the input fields */}
       <Box

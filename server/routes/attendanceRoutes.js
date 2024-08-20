@@ -4,7 +4,7 @@ const attendanceController = require('../controllers/attendanceController');
 const router = express.Router();
 
 // Student routes
-router.get('/students', attendanceController.getStudentsWithAttendance);
+router.get('/', attendanceController.getStudentsWithAttendance);
 router.post('/students', attendanceController.addStudent);
 router.put('/students/:id', attendanceController.updateStudent);
 router.delete('/students/:id', attendanceController.deleteStudent);

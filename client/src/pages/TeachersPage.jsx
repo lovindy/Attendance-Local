@@ -91,7 +91,7 @@ function TeachersPage() {
   };
 
   return (
-    <div>
+    <div className="app-component">
       <h1>{editingTeacher ? 'Edit Teacher' : 'Create Teacher'}</h1>
       {/* Form for the input field */}
       <Box

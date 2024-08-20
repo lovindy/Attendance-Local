@@ -80,7 +80,7 @@ function TestPage() {
   if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <Container>
+    <Container className='app-component'>
       <Typography variant="h4" gutterBottom>
         Teachers
       </Typography>

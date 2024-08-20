@@ -80,7 +80,7 @@ function UsersPage() {
   }
 
   return (
-    <div>
+    <div className='app-component'>
       <h2>{editingUser ? 'Edit User' : 'Add User'}</h2>
       <Box
         component="form"

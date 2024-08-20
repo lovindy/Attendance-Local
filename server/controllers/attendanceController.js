@@ -1,4 +1,5 @@
 const { Student, Attendance } = require('../models');
+const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
 // Get all students with attendance records
