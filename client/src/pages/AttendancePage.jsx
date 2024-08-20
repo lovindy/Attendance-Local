@@ -109,9 +109,9 @@ function AttendancePage() {
             <TableRow>
               <TableCell>Student ID</TableCell>
               <TableCell>Student Name</TableCell>
-              <TableCell>Class</TableCell> 
+              <TableCell>Class</TableCell>
               <TableCell>Date</TableCell>
-              <TableCell>Status</TableCell> 
+              <TableCell>Status</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -122,9 +122,7 @@ function AttendancePage() {
                   <TableRow key={attendance.attendance_id}>
                     <TableCell>{student.student_id}</TableCell>
                     <TableCell>{student.name}</TableCell>
-                    <TableCell>
-                      {attendance.Class?.name || 'N/A'}
-                    </TableCell>
+                    <TableCell>{attendance.Class?.name || 'N/A'}</TableCell>
                     {/* Display Class Name */}
                     <TableCell>
                       {new Date(attendance.date).toLocaleDateString()}
