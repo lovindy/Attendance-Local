@@ -46,7 +46,7 @@ function UsersPage() {
   const handleCreateUser = async () => {
     try {
       await createUser(newUser).unwrap();
-      setNewUser({ name: '', email: '', role: '', password: '' });
+      setNewUser({ name: '', email: '', role: '', password: '', user_id: '' });
     } catch (err) {
       console.error('Failed to create user:', err);
       alert('Error creating user. Please check the required fields.');
@@ -137,12 +137,13 @@ function UsersPage() {
           {editingUser ? 'Update User' : 'Create User'}
         </Button>
       </Box>
-      <h1>Users Management</h1>
 
+      <h1>Users Management</h1>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
@@ -155,6 +156,7 @@ function UsersPage() {
             {Array.isArray(users) && users.length > 0 ? (
               users.map((user) => (
                 <TableRow key={user.user_id}>
+                  <TableCell>{user.user_id}</TableCell>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
