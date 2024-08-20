@@ -80,7 +80,7 @@ function AdminsPage() {
     );
   }
   return (
-    <div className='app-component'>
+    <div className="app-component">
       <h2>{editingAdmin ? 'Edit Admin' : 'Add Admin'}</h2>
       <Box
         component="form"
