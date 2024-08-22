@@ -5,28 +5,40 @@ const APIFeatures = require('../utils/apiFeatures');
 // Create handlerFactory function
 
 // Create One
-exports.createOne = (Model) =>
+exports.createOne = (Model, roleModels = {}) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.create(req.body);
+    try {
+      const doc = await Model.create(req.body);
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        data: doc,
-      },
-    });
+      // Handle role-specific logic based on the provided roleModels
+      const { role } = req.body;
+      if (role && roleModels[role]) {
+        await roleModels[role].create({
+          user_id: doc.user_id,
+          name: doc.name,
+          email: doc.email,
+        });
+      }
+
+      res.status(201).json({
+        status: 'success',
+        data: {
+          data: doc,
+        },
+      });
+    } catch (err) {
+      console.error('Error creating record:', err);
+      return next(new AppError('Failed to create record', 500));
+    }
   });
 
 // Get One
-exports.getOne = (Model, idField, popOptions) =>
+exports.getOne = (Model, idField, popOptions = []) =>
   catchAsync(async (req, res, next) => {
     let options = {
-      where: { [idField]: req.params.id }, // Use the dynamic ID field
+      where: { [idField]: req.params.id },
+      include: popOptions, // Include associations
     };
-
-    if (popOptions) {
-      options.include = popOptions;
-    }
 
     const doc = await Model.findOne(options);
 
@@ -43,11 +55,10 @@ exports.getOne = (Model, idField, popOptions) =>
   });
 
 // Get All Need to fix more flexible
-exports.getAll = (Model, additionalFilter = {}) =>
+exports.getAll = (Model, additionalFilter = {}, popOptions = []) =>
   catchAsync(async (req, res, next) => {
     let filter = { ...additionalFilter };
 
-    // If there's a specific parameter for filtering (e.g., based on ID)
     if (req.params.id) filter = { ...filter, id: req.params.id };
 
     const features = new APIFeatures(Model, req.query)
@@ -56,7 +67,10 @@ exports.getAll = (Model, additionalFilter = {}) =>
       .limitFields()
       .paginate();
 
-    const doc = await features.exec();
+    const doc = await features.exec({
+      where: filter,
+      include: popOptions,
+    });
 
     if (!doc || doc.length === 0) {
       return next(new AppError('No documents found', 404));

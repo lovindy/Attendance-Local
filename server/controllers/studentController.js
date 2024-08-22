@@ -1,34 +1,49 @@
-const { Student } = require('../models');
-const catchAsync = require('../utils/catchAsync');
+const { Student, Attendance, Class } = require('../models');
 const factory = require('./handlerFactory');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-// Get one student
+// Add a new student and create default attendance
+exports.addStudent = catchAsync(async (req, res, next) => {
+  const { name, class_id, user_id } = req.body;
+
+  // Check if the class exists
+  const classExists = await Class.findByPk(class_id);
+  if (!classExists) {
+    return next(new AppError('Class not found', 404));
+  }
+
+  // Create the student and assign it to the class
+  const student = await Student.create({
+    name,
+    class_id,
+    user_id,
+  });
+
+  // Create a default attendance record with 'absent' status
+  await Attendance.create({
+    date: new Date(), // Set the current date
+    status: 'absent', // Default status is 'absent'
+    student_id: student.student_id, // Associate the attendance with the student
+    class_id: class_id, // Associate the attendance with the class
+  });
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      student,
+    },
+  });
+});
+
+// Get Student By ID
 exports.getStudent = factory.getOne(Student, 'student_id');
 
-// Get all students
+// Get all students with their attendance records
 exports.getAllStudents = factory.getAll(Student);
 
-// exports.getAllStudents = catchAsync(async (req, res, next) => {
-//   const doc = await Students.findAll(); // Fetch all records without filtering
-
-//   if (!doc || doc.length === 0) {
-//     return next(new AppError('No students found', 404));
-//   }
-
-//   res.status(200).json({
-//     status: 'success',
-//     results: doc.length,
-//     data: {
-//       data: doc,
-//     },
-//   });
-// });
-
-// Add a new student
-exports.addStudent = factory.createOne(Student);
-
-// Update student
+// Update student details and their attendance records
 exports.updateStudent = factory.updateOne(Student, 'student_id');
 
-// Delete student
+// Delete student and their attendance records
 exports.deleteStudent = factory.deleteOne(Student, 'student_id');

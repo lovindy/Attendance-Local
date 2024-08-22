@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       as: 'Teachers',
       onDelete: 'CASCADE',
     });
+    Admin.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      as: 'User',
+      onDelete: 'CASCADE',
+    });
   };
 
   return Admin;

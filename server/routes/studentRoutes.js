@@ -1,12 +1,17 @@
 const express = require('express');
-const router = express.Router();
 const studentController = require('../controllers/studentController');
 
-// Student routes
-router.get('/', studentController.getAllStudents);
-router.post('/', studentController.addStudent);
-router.get('/:id', studentController.getStudent);
-router.put('/:id', studentController.updateStudent);
-router.delete('/:id', studentController.deleteStudent);
+const router = express.Router();
+
+router
+  .route('/')
+  .post(studentController.addStudent) // Create student with default attendance
+  .get(studentController.getAllStudents);
+
+router
+  .route('/:id')
+  .get(studentController.getStudent)
+  .patch(studentController.updateStudent)
+  .delete(studentController.deleteStudent);
 
 module.exports = router;

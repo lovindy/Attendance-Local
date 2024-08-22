@@ -23,18 +23,18 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Class.associate = (models) => {
+    // Class has many Students
     Class.hasMany(models.Student, {
       foreignKey: 'class_id',
       as: 'Students',
+      onDelete: 'CASCADE',
     });
-    Class.belongsToMany(models.Subject, {
-      through: 'ClassSubjects',
-      foreignKey: 'class_id',
-      as: 'Subjects',
-    });
+
+    // Class has many Attendances
     Class.hasMany(models.Attendance, {
       foreignKey: 'class_id',
       as: 'Attendances',
+      onDelete: 'CASCADE',
     });
   };
 
