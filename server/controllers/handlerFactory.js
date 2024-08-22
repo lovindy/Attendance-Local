@@ -3,34 +3,45 @@ const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
 
 // Create handlerFactory function
-
 // Create One
-exports.createOne = (Model, roleModels = {}) =>
+exports.createOne = (Model, popOptions = []) =>
   catchAsync(async (req, res, next) => {
-    try {
-      const doc = await Model.create(req.body);
+    const doc = await Model.create(req.body, { include: popOptions }); // Include associations
 
-      // Handle role-specific logic based on the provided roleModels
-      const { role } = req.body;
-      if (role && roleModels[role]) {
-        await roleModels[role].create({
-          user_id: doc.user_id,
-          name: doc.name,
-          email: doc.email,
-        });
-      }
-
-      res.status(201).json({
-        status: 'success',
-        data: {
-          data: doc,
-        },
-      });
-    } catch (err) {
-      console.error('Error creating record:', err);
-      return next(new AppError('Failed to create record', 500));
-    }
+    res.status(201).json({
+      status: 'success',
+      data: {
+        data: doc,
+      },
+    });
   });
+
+// exports.createOne = (Model, roleModels = {}) =>
+//   catchAsync(async (req, res, next) => {
+//     try {
+//       const doc = await Model.create(req.body);
+
+//       const { role } = req.body;
+//       if (role && roleModels[role]) {
+//         await roleModels[role].create({
+//           user_id: doc.user_id,
+//           name: doc.name,
+//           email: doc.email,
+//         });
+//       }
+
+//       res.status(201).json({
+//         status: 'success',
+//         data: {
+//           data: doc,
+//         },
+//       });
+//     } catch (err) {
+//       console.error('Error creating record:', err.message);
+//       console.error('Stack trace:', err.stack);
+//       return next(new AppError(`Failed to create record: ${err.message}`, 500));
+//     }
+//   });
 
 // Get One
 exports.getOne = (Model, idField, popOptions = []) =>

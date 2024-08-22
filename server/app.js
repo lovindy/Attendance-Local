@@ -10,7 +10,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const userRoutes = require('./routes/userRoutes');
 const classRoutes = require('./routes/classRoutes');
-
+const globalErrorHandler = require('./controllers/errorController');
 // Middleware
 const app = express();
 
@@ -36,5 +36,6 @@ app.use('/api/v1/admins', adminRoutes);
 app.use('/api/v1/attendance', attendanceRoutes);
 app.use('/api/v1/classes', classRoutes);
 
+app.use(globalErrorHandler);
 // Export app
 module.exports = app;
