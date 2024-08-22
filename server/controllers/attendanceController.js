@@ -1,24 +1,8 @@
-const { Student, Attendance, Class } = require('../models'); // Make sure the path to your models is correct
-const catchAsync = require('../utils/catchAsync');
+const { Student, Attendance, Class } = require('../models'); // Ensure models are correctly imported
 const factory = require('./handlerFactory');
+const catchAsync = require('../utils/catchAsync');
 
 // Get all students with attendance records
-// exports.getStudentsWithAttendance = async (req, res) => {
-//   try {
-//     const students = await Student.findAll({
-//       include: [
-//         {
-//           model: Attendance,
-//           as: 'Attendances', // Use the alias specified in your associations
-//         },
-//       ],
-//     });
-//     res.json(students);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
 exports.getStudentsWithAttendance = async (req, res) => {
   try {
     const students = await Student.findAll({
@@ -28,8 +12,8 @@ exports.getStudentsWithAttendance = async (req, res) => {
           as: 'Attendances',
           include: [
             {
-              model: Class, // Include the Class model
-              as: 'Class', // Make sure this alias matches your association
+              model: Class, // Ensure associations are correct
+              as: 'Class',
             },
           ],
         },
@@ -52,11 +36,37 @@ exports.recordAttendance = async (req, res) => {
   }
 };
 
+exports.updateStudentWithAttendance = catchAsync(async (req, res, next) => {
+  const { student_id, name, class_id, user_id, Attendances } = req.body;
+
+  // Update the student
+  const updatedStudent = await Student.update(
+    { name, class_id, user_id },
+    { where: { student_id: req.params.id } }
+  );
+
+  if (!updatedStudent) {
+    return next(new AppError('No student found with that ID', 404));
+  }
+
+  // Update the related attendances
+  for (const attendance of Attendances) {
+    await Attendance.update(attendance, {
+      where: { attendance_id: attendance.attendance_id },
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      student: updatedStudent,
+      attendances: Attendances,
+    },
+  });
+});
+
 // Add a new student
 exports.addStudent = factory.createOne(Student);
-
-// Update student
-exports.updateStudent = factory.updateOne(Student, 'student_id');
 
 // Delete student
 exports.deleteStudent = factory.deleteOne(Student, 'student_id');

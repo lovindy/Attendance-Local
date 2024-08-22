@@ -14,10 +14,11 @@ import {
   Paper,
   TableContainer,
   Button,
+  CircularProgress,
   TextField,
   TableHead,
-  CircularProgress,
 } from '@mui/material';
+import FilterComponent from '../components/common/FilterComponent';
 
 function UsersPage() {
   const { data, error, isLoading } = useFetchUsersQuery();
@@ -32,8 +33,29 @@ function UsersPage() {
     password: '',
   });
   const [editingUser, setEditingUser] = useState(null);
+  const [filters, setFilters] = useState({});
 
   const users = data?.data || [];
+
+  // Filter and sort users
+  const filteredUsers = users
+    .filter((user) => {
+      return Object.keys(filters).every((key) =>
+        user[key].toString().toLowerCase().includes(filters[key].toLowerCase())
+      );
+    })
+    .sort((a, b) => {
+      if (a.user_id === 1) return -1;
+      if (b.user_id === 1) return 1;
+      return a.user_id - b.user_id;
+    });
+
+  const handleFilterChange = (field, value) => {
+    setFilters({
+      ...filters,
+      [field]: value,
+    });
+  };
 
   const handleChange = (field, value) => {
     if (editingUser) {
@@ -46,7 +68,7 @@ function UsersPage() {
   const handleCreateUser = async () => {
     try {
       await createUser(newUser).unwrap();
-      setNewUser({ name: '', email: '', role: '', password: '', user_id: '' });
+      setNewUser({ name: '', email: '', role: '', password: '' });
     } catch (err) {
       console.error('Failed to create user:', err);
       alert('Error creating user. Please check the required fields.');
@@ -80,7 +102,7 @@ function UsersPage() {
   }
 
   return (
-    <div className='app-component'>
+    <div className="app-component">
       <h2>{editingUser ? 'Edit User' : 'Add User'}</h2>
       <Box
         component="form"
@@ -118,7 +140,6 @@ function UsersPage() {
           onChange={(e) => handleChange('role', e.target.value)}
           fullWidth
         />
-        {/* Add password field for new user */}
         {!editingUser && (
           <TextField
             label="Password"
@@ -139,6 +160,17 @@ function UsersPage() {
       </Box>
 
       <h1>Users Management</h1>
+
+      {/* Reusable Filter Component */}
+      <FilterComponent
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        fields={[
+          { name: 'user_id', label: 'Filter by ID' },
+          { name: 'name', label: 'Filter by Name' },
+        ]}
+      />
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -153,8 +185,8 @@ function UsersPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Array.isArray(users) && users.length > 0 ? (
-              users.map((user) => (
+            {Array.isArray(filteredUsers) && filteredUsers.length > 0 ? (
+              filteredUsers.map((user) => (
                 <TableRow key={user.user_id}>
                   <TableCell>{user.user_id}</TableCell>
                   <TableCell>{user.name}</TableCell>

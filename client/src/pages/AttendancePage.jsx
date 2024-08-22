@@ -10,6 +10,8 @@ import {
   Paper,
   TextField,
   IconButton,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import {
@@ -35,18 +37,15 @@ function AttendancePage() {
     setSearchQuery(e.target.value);
   };
 
-  const handleTogglePresent = async (attendance) => {
+  const handleStatusChange = async (attendance, newStatus) => {
     try {
-      // Toggle the 'present' status
       const updatedAttendance = {
         ...attendance,
-        present: !attendance.present,
+        status: newStatus,
       };
 
-      // Update the attendance record in the database
       await updateAttendance(updatedAttendance).unwrap();
 
-      // Update the local state with the new attendance status
       setAttendanceData((prevData) =>
         prevData.map((student) => ({
           ...student,
@@ -123,12 +122,24 @@ function AttendancePage() {
                     <TableCell>{student.student_id}</TableCell>
                     <TableCell>{student.name}</TableCell>
                     <TableCell>{attendance.Class?.name || 'N/A'}</TableCell>
-                    {/* Display Class Name */}
                     <TableCell>
                       {new Date(attendance.date).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>{attendance.status}</TableCell>
-                    {/* Display Attendance Status */}
+                    <TableCell>
+                      <Select
+                        value={attendance.status}
+                        onChange={(e) =>
+                          handleStatusChange(attendance, e.target.value)
+                        }
+                      >
+                        <MenuItem value="late">Late</MenuItem>
+                        <MenuItem value="present">Present</MenuItem>
+                        <MenuItem value="absent">Absent</MenuItem>
+                        <MenuItem value="absent_with_permission">
+                          Permission
+                        </MenuItem>
+                      </Select>
+                    </TableCell>
                     <TableCell>
                       <IconButton
                         onClick={() => handleDelete(attendance.attendance_id)}

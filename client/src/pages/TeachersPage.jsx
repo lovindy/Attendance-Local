@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-// Hooks from teacher API
 import {
   useFetchTeachersQuery,
   useCreateTeacherMutation,
   useUpdateTeacherMutation,
   useDeleteTeacherMutation,
 } from '../services/teachersApi';
-
 import {
   Box,
   Table,
@@ -20,31 +18,62 @@ import {
   TableHead,
   CircularProgress,
 } from '@mui/material';
+import FilterComponent from '../components/common/FilterComponent';
 
 function TeachersPage() {
   const { data, error, isLoading } = useFetchTeachersQuery();
-
   const [createTeacher] = useCreateTeacherMutation();
   const [updateTeacher] = useUpdateTeacherMutation();
   const [deleteTeacher] = useDeleteTeacherMutation();
 
-  const [newTeacher, setNewTeacher] = useState({ name: '', subject: '' });
+  const [newTeacher, setNewTeacher] = useState({
+    name: '',
+    subject: '',
+    user_id: '',
+  });
   const [editingTeacher, setEditingTeacher] = useState(null);
+  const [filters, setFilters] = useState({});
 
   // Extract teachers from the data response
   const teachers = data?.data || [];
 
-  // Handle Create
+  // Filter and sort teachers
+  const filteredTeachers = teachers
+    .filter((teacher) => {
+      return Object.keys(filters).every((key) =>
+        teacher[key]
+          ?.toString()
+          .toLowerCase()
+          .includes(filters[key].toLowerCase())
+      );
+    })
+    .sort((a, b) => a.teacher_id - b.teacher_id); // Adjust sorting if needed
+
+  // Handle input change
+  const handleChange = (field, value) => {
+    if (editingTeacher) {
+      setEditingTeacher({ ...editingTeacher, [field]: value });
+    } else {
+      setNewTeacher({ ...newTeacher, [field]: value });
+    }
+  };
+
+  const handleFilterChange = (field, value) => {
+    setFilters({
+      ...filters,
+      [field]: value,
+    });
+  };
+
   const handleCreateTeacher = async () => {
     try {
       await createTeacher(newTeacher).unwrap();
-      setNewTeacher({ name: '', subject: '' });
+      setNewTeacher({ name: '', subject: '', user_id: '' });
     } catch (err) {
       console.error('Failed to create teacher:', err);
     }
   };
 
-  // Handle Update
   const handleUpdateTeacher = async () => {
     try {
       await updateTeacher(editingTeacher).unwrap();
@@ -63,7 +92,6 @@ function TeachersPage() {
     }
   };
 
-  // Handle Delete
   const handleDeleteTeacher = async (id) => {
     try {
       await deleteTeacher(id).unwrap();
@@ -72,7 +100,6 @@ function TeachersPage() {
     }
   };
 
-  // Error message
   if (isLoading) return <CircularProgress />;
   if (error) {
     console.error('Error fetching teachers:', error);
@@ -80,15 +107,6 @@ function TeachersPage() {
       <div>Error: {error.data?.message || 'An unknown error occurred'}</div>
     );
   }
-
-  // Handle input change
-  const handleChange = (field, value) => {
-    if (editingTeacher) {
-      setEditingTeacher({ ...editingTeacher, [field]: value });
-    } else {
-      setNewTeacher({ ...newTeacher, [field]: value });
-    }
-  };
 
   return (
     <div className="app-component">
@@ -116,13 +134,19 @@ function TeachersPage() {
           fullWidth
         />
         <TextField
+          label="User ID"
+          variant="outlined"
+          value={editingTeacher ? editingTeacher.user_id : newTeacher.user_id}
+          onChange={(e) => handleChange('user_id', e.target.value)}
+          fullWidth
+        />
+        <TextField
           label="Subject"
           variant="outlined"
           value={editingTeacher ? editingTeacher.subject : newTeacher.subject}
           onChange={(e) => handleChange('subject', e.target.value)}
           fullWidth
         />
-
         <Button
           variant="contained"
           color="primary"
@@ -132,6 +156,16 @@ function TeachersPage() {
         </Button>
       </Box>
 
+      {/* Reusable Filter Component */}
+      <FilterComponent
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        fields={[
+          { name: 'name', label: 'Filter by Name' },
+          { name: 'subject', label: 'Filter by Subject' },
+        ]}
+      />
+
       <h1>Teachers Management</h1>
       {/* Table Container */}
       <TableContainer component={Paper}>
@@ -139,6 +173,7 @@ function TeachersPage() {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Subject</TableCell>
               <TableCell>Created At</TableCell>
@@ -148,9 +183,10 @@ function TeachersPage() {
           </TableHead>
           {/* Table Body */}
           <TableBody>
-            {Array.isArray(teachers) && teachers.length > 0 ? (
-              teachers.map((teacher) => (
+            {Array.isArray(filteredTeachers) && filteredTeachers.length > 0 ? (
+              filteredTeachers.map((teacher) => (
                 <TableRow key={teacher.teacher_id}>
+                  <TableCell>{teacher.teacher_id}</TableCell>
                   <TableCell>{teacher.name}</TableCell>
                   <TableCell>{teacher.subject}</TableCell>
                   <TableCell>
@@ -159,12 +195,7 @@ function TeachersPage() {
                   <TableCell>
                     {new Date(teacher.updatedAt).toLocaleString()}
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      display: 'flex',
-                      gap: 1,
-                    }}
-                  >
+                  <TableCell sx={{ display: 'flex', gap: 1 }}>
                     <Button
                       variant="contained"
                       color="primary"

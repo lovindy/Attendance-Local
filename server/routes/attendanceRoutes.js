@@ -6,7 +6,7 @@ const router = express.Router();
 // Student routes
 router.get('/', attendanceController.getStudentsWithAttendance);
 router.post('/students', attendanceController.addStudent);
-router.put('/students/:id', attendanceController.updateStudent);
+router.put('/students/:id', attendanceController.updateStudentWithAttendance);
 router.delete('/students/:id', attendanceController.deleteStudent);
 
 // Attendance routes
