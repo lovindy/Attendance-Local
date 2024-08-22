@@ -17,6 +17,8 @@ import {
   CircularProgress,
   TextField,
   TableHead,
+  MenuItem,
+  Select,
 } from '@mui/material';
 import FilterComponent from '../components/common/FilterComponent';
 
@@ -31,13 +33,13 @@ function UsersPage() {
     email: '',
     role: '',
     password: '',
+    subject: '', // Specific field for teachers
   });
   const [editingUser, setEditingUser] = useState(null);
   const [filters, setFilters] = useState({});
 
   const users = data?.data || [];
 
-  // Filter and sort users
   const filteredUsers = users
     .filter((user) => {
       return Object.keys(filters).every((key) =>
@@ -67,8 +69,14 @@ function UsersPage() {
 
   const handleCreateUser = async () => {
     try {
-      await createUser(newUser).unwrap();
-      setNewUser({ name: '', email: '', role: '', password: '' });
+      const userToCreate = { ...newUser };
+
+      if (userToCreate.role !== 'Teacher') {
+        delete userToCreate.subject; // Remove subject if the role is not Teacher
+      }
+
+      await createUser(userToCreate).unwrap();
+      setNewUser({ name: '', email: '', role: '', password: '', subject: '' });
     } catch (err) {
       console.error('Failed to create user:', err);
       alert('Error creating user. Please check the required fields.');
@@ -77,7 +85,13 @@ function UsersPage() {
 
   const handleUpdateUser = async () => {
     try {
-      await updateUser(editingUser).unwrap();
+      const userToUpdate = { ...editingUser };
+
+      if (userToUpdate.role !== 'Teacher') {
+        delete userToUpdate.subject; // Remove subject if the role is not Teacher
+      }
+
+      await updateUser(userToUpdate).unwrap();
       setEditingUser(null);
     } catch (err) {
       console.error('Failed to update user:', err);
@@ -133,13 +147,27 @@ function UsersPage() {
           onChange={(e) => handleChange('email', e.target.value)}
           fullWidth
         />
-        <TextField
+        <Select
           label="Role"
-          variant="outlined"
           value={editingUser ? editingUser.role : newUser.role}
           onChange={(e) => handleChange('role', e.target.value)}
           fullWidth
-        />
+        >
+          <MenuItem value="Admin">Admin</MenuItem>
+          <MenuItem value="Teacher">Teacher</MenuItem>
+          <MenuItem value="Student">Student</MenuItem>
+          <MenuItem value="Parent">Parent</MenuItem>
+        </Select>
+        {((editingUser && editingUser.role === 'Teacher') ||
+          (!editingUser && newUser.role === 'Teacher')) && (
+          <TextField
+            label="Subject"
+            variant="outlined"
+            value={editingUser ? editingUser.subject : newUser.subject}
+            onChange={(e) => handleChange('subject', e.target.value)}
+            fullWidth
+          />
+        )}
         {!editingUser && (
           <TextField
             label="Password"
@@ -161,7 +189,6 @@ function UsersPage() {
 
       <h1>Users Management</h1>
 
-      {/* Reusable Filter Component */}
       <FilterComponent
         filters={filters}
         onFilterChange={handleFilterChange}
@@ -179,6 +206,9 @@ function UsersPage() {
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
+              {filteredUsers.some((user) => user.role === 'Teacher') && (
+                <TableCell>Subject</TableCell>
+              )}
               <TableCell>Created At</TableCell>
               <TableCell>Updated At</TableCell>
               <TableCell>Actions</TableCell>
@@ -192,6 +222,9 @@ function UsersPage() {
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
+                  {user.role === 'Teacher' && (
+                    <TableCell>{user.subject}</TableCell>
+                  )}
                   <TableCell>
                     {new Date(user.createdAt).toLocaleString()}
                   </TableCell>
@@ -218,7 +251,7 @@ function UsersPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6}>No users available</TableCell>
+                <TableCell colSpan={7}>No users available</TableCell>
               </TableRow>
             )}
           </TableBody>
