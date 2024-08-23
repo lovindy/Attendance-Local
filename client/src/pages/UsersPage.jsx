@@ -28,7 +28,7 @@ function UsersPage() {
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
-    role: '', // Ensure this matches the available options
+    role: '',
     password: '',
     subject: '',
   });
@@ -36,7 +36,7 @@ function UsersPage() {
   const [filters, setFilters] = useState({});
 
   const users = data?.data || [];
-
+  
   const filteredUsers = users
     .filter((user) => {
       return Object.keys(filters).every((key) =>
@@ -68,7 +68,6 @@ function UsersPage() {
     try {
       const userToSubmit = editingUser || newUser;
 
-      // Ensure role value matches one of the available options
       if (
         !['Admin', 'Teacher', 'Student', 'Parent'].includes(userToSubmit.role)
       ) {
@@ -88,7 +87,7 @@ function UsersPage() {
         setNewUser({
           name: '',
           email: '',
-          role: '', // Reset role to empty string
+          role: '',
           password: '',
           subject: '',
         });
@@ -108,13 +107,7 @@ function UsersPage() {
   };
 
   if (isLoading) return <CircularProgress />;
-  if (error) {
-    console.error('Error fetching users:', error);
-    return (
-      <div>Error: {error.data?.message || 'An unknown error occurred'}</div>
-    );
-  }
-
+  
   return (
     <div className="app-component">
       <h2>{editingUser ? 'Edit User' : 'Add User'}</h2>
@@ -128,6 +121,10 @@ function UsersPage() {
       <h1>Users Management</h1>
 
       <SearchFilter filters={filters} onFilterChange={handleFilterChange} />
+
+      {error && (
+        <div>Error: {error.data?.message || 'An unknown error occurred'}</div>
+      )}
 
       <TableContainer component={Paper}>
         <Table>
