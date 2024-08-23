@@ -6,7 +6,6 @@ import {
   useDeleteUserMutation,
 } from '../services/usersApi';
 import {
-  Box,
   Table,
   TableBody,
   TableCell,
@@ -15,12 +14,10 @@ import {
   TableContainer,
   Button,
   CircularProgress,
-  TextField,
   TableHead,
-  MenuItem,
-  Select,
 } from '@mui/material';
-import FilterComponent from '../components/common/FilterComponent';
+import SearchFilter from '../components/common/SearchFilter';
+import UserForm from '../components/common/UserForm';
 
 function UsersPage() {
   const { data, error, isLoading } = useFetchUsersQuery();
@@ -31,9 +28,9 @@ function UsersPage() {
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
-    role: '',
+    role: '', // Ensure this matches the available options
     password: '',
-    subject: '', // Specific field for teachers
+    subject: '',
   });
   const [editingUser, setEditingUser] = useState(null);
   const [filters, setFilters] = useState({});
@@ -43,7 +40,7 @@ function UsersPage() {
   const filteredUsers = users
     .filter((user) => {
       return Object.keys(filters).every((key) =>
-        user[key].toString().toLowerCase().includes(filters[key].toLowerCase())
+        user[key]?.toString().toLowerCase().includes(filters[key].toLowerCase())
       );
     })
     .sort((a, b) => {
@@ -67,35 +64,38 @@ function UsersPage() {
     }
   };
 
-  const handleCreateUser = async () => {
+  const handleCreateOrUpdateUser = async () => {
     try {
-      const userToCreate = { ...newUser };
+      const userToSubmit = editingUser || newUser;
 
-      if (userToCreate.role !== 'Teacher') {
-        delete userToCreate.subject; // Remove subject if the role is not Teacher
+      // Ensure role value matches one of the available options
+      if (
+        !['Admin', 'Teacher', 'Student', 'Parent'].includes(userToSubmit.role)
+      ) {
+        alert('Invalid role selected');
+        return;
       }
 
-      await createUser(userToCreate).unwrap();
-      setNewUser({ name: '', email: '', role: '', password: '', subject: '' });
-    } catch (err) {
-      console.error('Failed to create user:', err);
-      alert('Error creating user. Please check the required fields.');
-    }
-  };
-
-  const handleUpdateUser = async () => {
-    try {
-      const userToUpdate = { ...editingUser };
-
-      if (userToUpdate.role !== 'Teacher') {
-        delete userToUpdate.subject; // Remove subject if the role is not Teacher
+      if (userToSubmit.role !== 'Teacher') {
+        delete userToSubmit.subject;
       }
 
-      await updateUser(userToUpdate).unwrap();
-      setEditingUser(null);
+      if (editingUser) {
+        await updateUser(userToSubmit).unwrap();
+        setEditingUser(null);
+      } else {
+        await createUser(userToSubmit).unwrap();
+        setNewUser({
+          name: '',
+          email: '',
+          role: '', // Reset role to empty string
+          password: '',
+          subject: '',
+        });
+      }
     } catch (err) {
-      console.error('Failed to update user:', err);
-      alert('Error updating user. Please check the required fields.');
+      console.error('Failed to submit user:', err);
+      alert('Error submitting user. Please check the required fields.');
     }
   };
 
@@ -118,85 +118,16 @@ function UsersPage() {
   return (
     <div className="app-component">
       <h2>{editingUser ? 'Edit User' : 'Add User'}</h2>
-      <Box
-        component="form"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          maxWidth: 400,
-          margin: 'auto',
-          padding: 2,
-          backgroundColor: '#f5f5f5',
-          borderRadius: 1,
-          boxShadow: 3,
-        }}
-      >
-        <TextField
-          label="Name"
-          variant="outlined"
-          value={editingUser ? editingUser.name : newUser.name}
-          onChange={(e) => handleChange('name', e.target.value)}
-          fullWidth
-        />
-        <TextField
-          label="Email"
-          variant="outlined"
-          type="email"
-          value={editingUser ? editingUser.email : newUser.email}
-          onChange={(e) => handleChange('email', e.target.value)}
-          fullWidth
-        />
-        <Select
-          label="Role"
-          value={editingUser ? editingUser.role : newUser.role}
-          onChange={(e) => handleChange('role', e.target.value)}
-          fullWidth
-        >
-          <MenuItem value="Admin">Admin</MenuItem>
-          <MenuItem value="Teacher">Teacher</MenuItem>
-          <MenuItem value="Student">Student</MenuItem>
-          <MenuItem value="Parent">Parent</MenuItem>
-        </Select>
-        {((editingUser && editingUser.role === 'Teacher') ||
-          (!editingUser && newUser.role === 'Teacher')) && (
-          <TextField
-            label="Subject"
-            variant="outlined"
-            value={editingUser ? editingUser.subject : newUser.subject}
-            onChange={(e) => handleChange('subject', e.target.value)}
-            fullWidth
-          />
-        )}
-        {!editingUser && (
-          <TextField
-            label="Password"
-            variant="outlined"
-            type="password"
-            value={newUser.password}
-            onChange={(e) => handleChange('password', e.target.value)}
-            fullWidth
-          />
-        )}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={editingUser ? handleUpdateUser : handleCreateUser}
-        >
-          {editingUser ? 'Update User' : 'Create User'}
-        </Button>
-      </Box>
+      <UserForm
+        user={editingUser || newUser}
+        isEditing={!!editingUser}
+        onChange={handleChange}
+        onSubmit={handleCreateOrUpdateUser}
+      />
 
       <h1>Users Management</h1>
 
-      <FilterComponent
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        fields={[
-          { name: 'user_id', label: 'Filter by ID' },
-          { name: 'name', label: 'Filter by Name' },
-        ]}
-      />
+      <SearchFilter filters={filters} onFilterChange={handleFilterChange} />
 
       <TableContainer component={Paper}>
         <Table>
