@@ -35,3 +35,10 @@ export const studentsApi = baseApi.injectEndpoints({
     }),
   }),
 });
+
+export const {
+  useFetchStudentsQuery,
+  useCreateStudentMutation,
+  useUpdateStudentMutation,
+  useDeleteStudentMutation,
+} = studentsApi;

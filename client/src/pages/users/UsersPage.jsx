@@ -12,10 +12,13 @@ import {
   TableRow,
   Paper,
   TableContainer,
-  Button,
   CircularProgress,
   TableHead,
+  IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SearchFilter from '../../components/common/SearchFilter';
 import UserForm from '../../components/common/UserForm';
 
@@ -34,6 +37,8 @@ function UsersPage() {
   });
   const [editingUser, setEditingUser] = useState(null);
   const [filters, setFilters] = useState({});
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [menuUserId, setMenuUserId] = useState(null);
 
   const users = data?.data || [];
 
@@ -108,6 +113,16 @@ function UsersPage() {
     }
   };
 
+  const handleMenuOpen = (event, userId) => {
+    setAnchorEl(event.currentTarget);
+    setMenuUserId(userId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setMenuUserId(null);
+  };
+
   if (isLoading) return <CircularProgress />;
 
   return (
@@ -161,21 +176,36 @@ function UsersPage() {
                   <TableCell>
                     {new Date(user.updatedAt).toLocaleString()}
                   </TableCell>
-                  <TableCell sx={{ display: 'flex', gap: 1 }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => setEditingUser(user)}
+                  <TableCell>
+                    <IconButton
+                      aria-controls="simple-menu"
+                      aria-haspopup="true"
+                      onClick={(event) => handleMenuOpen(event, user.user_id)}
                     >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleDeleteUser(user.user_id)}
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={menuUserId === user.user_id}
+                      onClose={handleMenuClose}
                     >
-                      Delete
-                    </Button>
+                      <MenuItem
+                        onClick={() => {
+                          setEditingUser(user);
+                          handleMenuClose();
+                        }}
+                      >
+                        Edit
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          handleDeleteUser(user.user_id);
+                          handleMenuClose();
+                        }}
+                      >
+                        Delete
+                      </MenuItem>
+                    </Menu>
                   </TableCell>
                 </TableRow>
               ))

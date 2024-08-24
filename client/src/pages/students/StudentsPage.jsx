@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import {
+  useFetchStudentsQuery,
+  useCreateStudentMutation,
+  useUpdateStudentMutation,
+  useDeleteStudentMutation,
+} from '../../services/studentsApi';
+import {
   Table,
   TableBody,
   TableCell,
