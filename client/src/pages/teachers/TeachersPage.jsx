@@ -1,158 +1,133 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-  useFetchTeachersQuery,
-  useCreateTeacherMutation,
-  useUpdateTeacherMutation,
-  useDeleteTeacherMutation,
-} from '../../services/teachersApi';
+  useFetchUsersQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+} from '../../services/usersApi';
+import UserForm from '../../components/common/UserForm';
 import {
-  Box,
   Table,
   TableBody,
   TableCell,
   TableRow,
   Paper,
   TableContainer,
-  Button,
-  TextField,
   TableHead,
   CircularProgress,
+  IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
-import FilterComponent from '../../components/common/FilterComponent';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function TeachersPage() {
-  const { data, error, isLoading } = useFetchTeachersQuery();
-  const [createTeacher] = useCreateTeacherMutation();
-  const [updateTeacher] = useUpdateTeacherMutation();
-  const [deleteTeacher] = useDeleteTeacherMutation();
+  const {
+    data: userData,
+    error: userError,
+    isLoading: isUserLoading,
+  } = useFetchUsersQuery();
 
-  const [newTeacher, setNewTeacher] = useState({
-    name: '',
-    subject: '',
-    user_id: '',
-  });
-  const [editingTeacher, setEditingTeacher] = useState(null);
-  const [filters, setFilters] = useState({});
+  const [createUser] = useCreateUserMutation();
+  const [updateUser] = useUpdateUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
 
-  const teachers = data?.data || [];
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [menuTeacherId, setMenuTeacherId] = useState(null);
 
-  const filteredTeachers = teachers
-    .filter((teacher) =>
-      Object.keys(filters).every((key) =>
-        teacher[key]
-          ?.toString()
-          .toLowerCase()
-          .includes(filters[key].toLowerCase())
-      )
-    )
-    .sort((a, b) => a.teacher_id - b.teacher_id);
+  const users = userData?.data || [];
 
-  const handleChange = (field, value) => {
-    if (editingTeacher) {
-      setEditingTeacher({ ...editingTeacher, [field]: value });
-    } else {
-      setNewTeacher({ ...newTeacher, [field]: value });
-    }
-  };
+  // Filter users by role "teacher" and sort by ID
+  const teacherUsers = users
+    .filter((user) => user.role === 'teacher')
+    .sort((a, b) => a.user_id - b.user_id);
 
-  const handleFilterChange = (field, value) => {
-    setFilters({
-      ...filters,
+  const handleFormChange = (field, value) => {
+    setSelectedTeacher((prevTeacher) => ({
+      ...prevTeacher,
       [field]: value,
+    }));
+  };
+
+  const handleFormSubmit = async () => {
+    const formattedTeacher = {
+      ...selectedTeacher.User,
+      role: selectedTeacher.User.role.toLowerCase(),
+    };
+
+    if (isEditing) {
+      try {
+        await updateUser({
+          id: selectedTeacher.user_id,
+          ...formattedTeacher,
+        }).unwrap();
+        setIsEditing(false);
+        setSelectedTeacher(null);
+      } catch (err) {
+        console.error('Failed to update teacher:', err);
+        alert('Error updating teacher. Please check the required fields.');
+      }
+    } else {
+      try {
+        await createUser(formattedTeacher).unwrap();
+        setSelectedTeacher(null);
+      } catch (err) {
+        console.error('Failed to create teacher:', err);
+        alert('Error creating teacher. Please check the required fields.');
+      }
+    }
+  };
+
+  const handleEditTeacher = (user) => {
+    setSelectedTeacher({
+      ...user,
+      User: {
+        ...user,
+        role: user.role.charAt(0).toUpperCase() + user.role.slice(1),
+      },
     });
+    setIsEditing(true);
   };
 
-  const handleCreateTeacher = async () => {
+  const handleDeleteTeacher = async (userId) => {
     try {
-      await createTeacher(newTeacher).unwrap();
-      setNewTeacher({ name: '', subject: '', user_id: '' });
-    } catch (err) {
-      console.error('Failed to create teacher:', err);
-      alert('Error creating teacher. Please check the required fields.');
-    }
-  };
-
-  const handleUpdateTeacher = async () => {
-    try {
-      await updateTeacher(editingTeacher).unwrap();
-      setEditingTeacher(null);
-    } catch (err) {
-      console.error('Failed to update teacher:', err);
-      alert('Error updating teacher. Please check the required fields.');
-    }
-  };
-
-  const handleDeleteTeacher = async (id) => {
-    try {
-      await deleteTeacher(id).unwrap();
+      await deleteUser(userId).unwrap();
+      setAnchorEl(null);
     } catch (err) {
       console.error('Failed to delete teacher:', err);
     }
   };
 
-  if (isLoading) return <CircularProgress />;
-  if (error) {
-    console.error('Error fetching teachers:', error);
+  const handleMenuOpen = (event, userId) => {
+    setAnchorEl(event.currentTarget);
+    setMenuTeacherId(userId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  if (isUserLoading) return <CircularProgress />;
+  if (userError) {
+    console.error('Error fetching users:', userError);
     return (
-      <div>Error: {error.data?.message || 'An unknown error occurred'}</div>
+      <div>Error: {userError.data?.message || 'An unknown error occurred'}</div>
     );
   }
 
   return (
     <div className="app-component">
-      <h2>{editingTeacher ? 'Edit Teacher' : 'Add Teacher'}</h2>
-      <Box
-        component="form"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          maxWidth: 400,
-          margin: 'auto',
-          padding: 2,
-          backgroundColor: '#f5f5f5',
-          borderRadius: 1,
-          boxShadow: 3,
-        }}
-      >
-        <TextField
-          label="Name"
-          variant="outlined"
-          value={editingTeacher ? editingTeacher.name : newTeacher.name}
-          onChange={(e) => handleChange('name', e.target.value)}
-          fullWidth
+      <h2>{isEditing ? 'Edit Teacher' : 'Add Teacher'}</h2>
+      {selectedTeacher && (
+        <UserForm
+          user={selectedTeacher}
+          isEditing={isEditing}
+          onChange={handleFormChange}
+          onSubmit={handleFormSubmit}
         />
-        <TextField
-          label="Subject"
-          variant="outlined"
-          value={editingTeacher ? editingTeacher.subject : newTeacher.subject}
-          onChange={(e) => handleChange('subject', e.target.value)}
-          fullWidth
-        />
-        <TextField
-          label="User ID"
-          variant="outlined"
-          value={editingTeacher ? editingTeacher.user_id : newTeacher.user_id}
-          onChange={(e) => handleChange('user_id', e.target.value)}
-          fullWidth
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={editingTeacher ? handleUpdateTeacher : handleCreateTeacher}
-        >
-          {editingTeacher ? 'Update Teacher' : 'Create Teacher'}
-        </Button>
-      </Box>
-
-      <FilterComponent
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        fields={[
-          { name: 'name', label: 'Filter by Name' },
-          { name: 'subject', label: 'Filter by Subject' },
-        ]}
-      />
+      )}
 
       <h1>Teachers Management</h1>
       <TableContainer component={Paper}>
@@ -161,6 +136,7 @@ function TeachersPage() {
             <TableRow>
               <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
               <TableCell>Subject</TableCell>
               <TableCell>Created At</TableCell>
               <TableCell>Updated At</TableCell>
@@ -168,39 +144,48 @@ function TeachersPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredTeachers.length > 0 ? (
-              filteredTeachers.map((teacher) => (
-                <TableRow key={teacher.teacher_id}>
-                  <TableCell>{teacher.teacher_id}</TableCell>
-                  <TableCell>{teacher.name}</TableCell>
-                  <TableCell>{teacher.subject}</TableCell>
+            {teacherUsers.length > 0 ? (
+              teacherUsers.map((user) => (
+                <TableRow key={user.user_id}>
+                  <TableCell>{user.user_id}</TableCell>
+                  <TableCell>{user.name || 'N/A'}</TableCell>
+                  <TableCell>{user.email || 'N/A'}</TableCell>
+                  <TableCell>{user.subject || 'N/A'}</TableCell>
                   <TableCell>
-                    {new Date(teacher.createdAt).toLocaleString()}
+                    {new Date(user.createdAt).toLocaleString()}
                   </TableCell>
                   <TableCell>
-                    {new Date(teacher.updatedAt).toLocaleString()}
+                    {new Date(user.updatedAt).toLocaleString()}
                   </TableCell>
-                  <TableCell sx={{ display: 'flex', gap: 1 }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => setEditingTeacher(teacher)}
+                  <TableCell>
+                    <IconButton
+                      aria-controls="teacher-menu"
+                      aria-haspopup="true"
+                      onClick={(event) => handleMenuOpen(event, user.user_id)}
                     >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleDeleteTeacher(teacher.teacher_id)}
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      id="teacher-menu"
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl) && menuTeacherId === user.user_id}
+                      onClose={handleMenuClose}
                     >
-                      Delete
-                    </Button>
+                      <MenuItem onClick={() => handleEditTeacher(user)}>
+                        Edit
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => handleDeleteTeacher(user.user_id)}
+                      >
+                        Delete
+                      </MenuItem>
+                    </Menu>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6}>No teachers available</TableCell>
+                <TableCell colSpan={7}>No teachers available</TableCell>
               </TableRow>
             )}
           </TableBody>

@@ -9,7 +9,6 @@ import TeachersPage from './pages/teachers/TeachersPage';
 import AdminsPage from './pages/admins/AdminsPage';
 import UsersPage from './pages/users/UsersPage';
 import ClassPage from './pages/classes/ClassPage';
-import TestPage from './pages/TestPage';
 // Common Components
 import Navbar from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -25,7 +24,6 @@ const App = () => (
       <Route path="/admins" element={<AdminsPage />} />
       <Route path="/users" element={<UsersPage />} />
       <Route path="/classes" element={<ClassPage />} />
-      <Route path="/test" element={<TestPage />} />
     </Routes>
     <Footer />
   </>
