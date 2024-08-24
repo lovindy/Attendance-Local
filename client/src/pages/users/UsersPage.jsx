@@ -4,7 +4,7 @@ import {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
-} from '../services/usersApi';
+} from '../../services/usersApi';
 import {
   Table,
   TableBody,
@@ -16,8 +16,8 @@ import {
   CircularProgress,
   TableHead,
 } from '@mui/material';
-import SearchFilter from '../components/common/SearchFilter';
-import UserForm from '../components/common/UserForm';
+import SearchFilter from '../../components/common/SearchFilter';
+import UserForm from '../../components/common/UserForm';
 
 function UsersPage() {
   const { data, error, isLoading } = useFetchUsersQuery();
@@ -36,7 +36,7 @@ function UsersPage() {
   const [filters, setFilters] = useState({});
 
   const users = data?.data || [];
-  
+
   const filteredUsers = users
     .filter((user) => {
       return Object.keys(filters).every((key) =>
@@ -67,6 +67,7 @@ function UsersPage() {
   const handleCreateOrUpdateUser = async () => {
     try {
       const userToSubmit = editingUser || newUser;
+      console.log('Submitting user:', userToSubmit);
 
       if (
         !['Admin', 'Teacher', 'Student', 'Parent'].includes(userToSubmit.role)
@@ -83,7 +84,8 @@ function UsersPage() {
         await updateUser(userToSubmit).unwrap();
         setEditingUser(null);
       } else {
-        await createUser(userToSubmit).unwrap();
+        const response = await createUser(userToSubmit).unwrap();
+        console.log('User created:', response);
         setNewUser({
           name: '',
           email: '',
@@ -94,7 +96,7 @@ function UsersPage() {
       }
     } catch (err) {
       console.error('Failed to submit user:', err);
-      alert('Error submitting user. Please check the required fields.');
+      alert(`Error submitting user: ${err.data?.message || err.message}`);
     }
   };
 
@@ -107,7 +109,7 @@ function UsersPage() {
   };
 
   if (isLoading) return <CircularProgress />;
-  
+
   return (
     <div className="app-component">
       <h2>{editingUser ? 'Edit User' : 'Add User'}</h2>

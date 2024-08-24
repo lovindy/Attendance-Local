@@ -17,7 +17,7 @@ import {
   useFetchClassesQuery,
   useUpdateClassMutation,
   useDeleteClassMutation,
-} from '../services/classApi';
+} from '../../services/classApi';
 
 function ClassPage() {
   const { data, error, isLoading } = useFetchClassesQuery();

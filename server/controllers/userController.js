@@ -5,39 +5,48 @@ const AppError = require('../utils/appError');
 
 // Add a new User with role-specific logic
 exports.addUser = catchAsync(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, subject, class_id } = req.body;
 
   try {
     // Start a transaction to ensure both User and related role record are created together
-    const result = await User.sequelize.transaction(async (t) => {
+    const newUser = await User.sequelize.transaction(async (t) => {
       // Create the user
-      const newUser = await User.create(
+      const createdUser = await User.create(
         { name, email, password, role },
         { transaction: t }
       );
 
       // Based on the role, create the corresponding record
-      if (role === 'teacher') {
-        await Teacher.create(
-          { user_id: newUser.user_id, subject: req.body.subject },
-          { transaction: t }
-        );
-      } else if (role === 'student') {
-        await Student.create(
-          { user_id: newUser.user_id, class_id: req.body.class_id },
-          { transaction: t }
-        );
-      } else if (role === 'admin') {
-        await Admin.create({ user_id: newUser.user_id }, { transaction: t });
+      switch (role.toLowerCase()) {
+        case 'teacher':
+          await Teacher.create(
+            { user_id: createdUser.user_id, subject },
+            { transaction: t }
+          );
+          break;
+        case 'student':
+          await Student.create(
+            { user_id: createdUser.user_id, class_id },
+            { transaction: t }
+          );
+          break;
+        case 'admin':
+          await Admin.create(
+            { user_id: createdUser.user_id },
+            { transaction: t }
+          );
+          break;
+        default:
+          throw new AppError('Invalid role specified', 400);
       }
 
-      return newUser;
+      return createdUser;
     });
 
     res.status(201).json({
       status: 'success',
       data: {
-        user: result,
+        user: newUser,
       },
     });
   } catch (err) {

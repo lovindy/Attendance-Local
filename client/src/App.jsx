@@ -2,13 +2,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 // Pages Components
-import AttendancePage from './pages/AttendancePage';
+import AttendancePage from './pages/attendance/AttendancePage';
 import DashboardPage from './pages/DashboardPage';
-import StudentsPage from './pages/StudentsPage';
-import TeachersPage from './pages/TeachersPage';
-import AdminsPage from './pages/AdminsPage';
-import UsersPage from './pages/UsersPage';
-import ClassPage from './pages/ClassPage';
+import StudentsPage from './pages/students/StudentsPage';
+import TeachersPage from './pages/teachers/TeachersPage';
+import AdminsPage from './pages/admins/AdminsPage';
+import UsersPage from './pages/users/UsersPage';
+import ClassPage from './pages/classes/ClassPage';
 import TestPage from './pages/TestPage';
 // Common Components
 import Navbar from './components/layout/Header';
