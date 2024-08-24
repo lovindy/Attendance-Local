@@ -1,111 +1,80 @@
 import React from 'react';
 import {
-  Box,
   TextField,
-  Select,
-  MenuItem,
   Button,
   FormControl,
   InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 
-function UserForm({ user, isEditing, onChange, onSubmit }) {
-  const renderAdditionalFields = () => {
-    switch (user.role) {
-      case 'Teacher':
-        return (
-          <TextField
-            label="Subject"
-            variant="outlined"
-            value={user.subject || ''}
-            onChange={(e) => onChange('subject', e.target.value)}
-            fullWidth
-          />
-        );
-      case 'Student':
-        return (
-          <TextField
-            label="Class ID"
-            variant="outlined"
-            value={user.class_id || ''}
-            onChange={(e) => onChange('class_id', e.target.value)}
-            fullWidth
-          />
-        );
-      case 'Parent':
-        return (
-          <TextField
-            label="Child's ID"
-            variant="outlined"
-            value={user.child_id || ''}
-            onChange={(e) => onChange('child_id', e.target.value)}
-            fullWidth
-          />
-        );
-      default:
-        return null;
-    }
-  };
+const UserForm = ({ user, isEditing, onChange, onSubmit }) => {
+  const roles = ['Admin', 'Teacher', 'Student', 'Parent'];
 
   return (
-    <Box
-      component="form"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-        maxWidth: 400,
-        margin: 'auto',
-        padding: 2,
-        backgroundColor: '#f5f5f5',
-        borderRadius: 1,
-        boxShadow: 3,
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
       }}
     >
       <TextField
         label="Name"
-        variant="outlined"
         value={user.name}
         onChange={(e) => onChange('name', e.target.value)}
+        required
         fullWidth
+        margin="normal"
       />
       <TextField
         label="Email"
-        variant="outlined"
         type="email"
         value={user.email}
         onChange={(e) => onChange('email', e.target.value)}
+        required
         fullWidth
+        margin="normal"
       />
-      <FormControl fullWidth variant="outlined">
-        <InputLabel>Role</InputLabel>
-        <Select
-          label="Role"
-          value={user.role || ''}
-          onChange={(e) => onChange('role', e.target.value)}
-        >
-          <MenuItem value="Admin">Admin</MenuItem>
-          <MenuItem value="Teacher">Teacher</MenuItem>
-          <MenuItem value="Student">Student</MenuItem>
-          <MenuItem value="Parent">Parent</MenuItem>
-        </Select>
-      </FormControl>
-      {renderAdditionalFields()}
       {!isEditing && (
         <TextField
           label="Password"
-          variant="outlined"
           type="password"
           value={user.password}
           onChange={(e) => onChange('password', e.target.value)}
+          required
           fullWidth
+          margin="normal"
         />
       )}
-      <Button variant="contained" color="primary" onClick={onSubmit}>
-        {isEditing ? 'Update' : 'Create'}
+      <FormControl fullWidth margin="normal" required>
+        <InputLabel>Role</InputLabel>
+        <Select
+          value={user.role}
+          onChange={(e) => onChange('role', e.target.value)}
+          label="Role"
+        >
+          {roles.map((role) => (
+            <MenuItem key={role} value={role}>
+              {role}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      {user.role === 'Teacher' && (
+        <TextField
+          label="Subject"
+          value={user.subject}
+          onChange={(e) => onChange('subject', e.target.value)}
+          required
+          fullWidth
+          margin="normal"
+        />
+      )}
+      <Button variant="contained" color="primary" type="submit">
+        {isEditing ? 'Update User' : 'Create User'}
       </Button>
-    </Box>
+    </form>
   );
-}
+};
 
 export default UserForm;

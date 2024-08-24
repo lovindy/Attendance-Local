@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import {
-  useFetchAdminsQuery,
-  useCreateAdminMutation,
-  useUpdateAdminMutation,
-  useDeleteAdminMutation,
-} from '../../services/adminsApi';
+  useFetchUsersQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+} from '../../services/usersApi';
+
 import UserForm from '../../components/common/UserForm';
 import {
   Table,
@@ -13,21 +14,36 @@ import {
   TableRow,
   Paper,
   TableContainer,
-  Button,
   TableHead,
   CircularProgress,
+  IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function AdminsPage() {
-  const { data, error, isLoading } = useFetchAdminsQuery();
-  const [createAdmin] = useCreateAdminMutation();
-  const [updateAdmin] = useUpdateAdminMutation();
-  const [deleteAdmin] = useDeleteAdminMutation();
+  const {
+    data: userData,
+    error: userError,
+    isLoading: isUserLoading,
+  } = useFetchUsersQuery();
+
+  const [createUser] = useCreateUserMutation();
+  const [updateUser] = useUpdateUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
 
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [menuAdminId, setMenuAdminId] = useState(null);
 
-  const admins = data?.data || [];
+  const users = userData?.data || [];
+
+  // Filter users by role "admin" and sort by ID
+  const adminUsers = users
+    .filter((user) => user.role === 'admin')
+    .sort((a, b) => a.user_id - b.user_id);
 
   const handleFormChange = (field, value) => {
     setSelectedAdmin((prevAdmin) => ({
@@ -37,9 +53,17 @@ function AdminsPage() {
   };
 
   const handleFormSubmit = async () => {
+    const formattedAdmin = {
+      ...selectedAdmin.User,
+      role: selectedAdmin.User.role.toLowerCase(),
+    };
+
     if (isEditing) {
       try {
-        await updateAdmin(selectedAdmin).unwrap();
+        await updateUser({
+          id: selectedAdmin.user_id,
+          ...formattedAdmin,
+        }).unwrap();
         setIsEditing(false);
         setSelectedAdmin(null);
       } catch (err) {
@@ -48,7 +72,7 @@ function AdminsPage() {
       }
     } else {
       try {
-        await createAdmin(selectedAdmin).unwrap();
+        await createUser(formattedAdmin).unwrap();
         setSelectedAdmin(null);
       } catch (err) {
         console.error('Failed to create admin:', err);
@@ -57,24 +81,40 @@ function AdminsPage() {
     }
   };
 
-  const handleEditAdmin = (admin) => {
-    setSelectedAdmin(admin);
+  const handleEditAdmin = (user) => {
+    setSelectedAdmin({
+      ...user,
+      User: {
+        ...user,
+        role: user.role.charAt(0).toUpperCase() + user.role.slice(1),
+      },
+    });
     setIsEditing(true);
   };
 
-  const handleDeleteAdmin = async (id) => {
+  const handleDeleteAdmin = async (userId) => {
     try {
-      await deleteAdmin(id).unwrap();
+      await deleteUser(userId).unwrap();
+      setAnchorEl(null);
     } catch (err) {
       console.error('Failed to delete admin:', err);
     }
   };
 
-  if (isLoading) return <CircularProgress />;
-  if (error) {
-    console.error('Error fetching admins:', error);
+  const handleMenuOpen = (event, userId) => {
+    setAnchorEl(event.currentTarget);
+    setMenuAdminId(userId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  if (isUserLoading) return <CircularProgress />;
+  if (userError) {
+    console.error('Error fetching users:', userError);
     return (
-      <div>Error: {error.data?.message || 'An unknown error occurred'}</div>
+      <div>Error: {userError.data?.message || 'An unknown error occurred'}</div>
     );
   }
 
@@ -98,47 +138,51 @@ function AdminsPage() {
               <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>User ID</TableCell>
               <TableCell>Created At</TableCell>
               <TableCell>Updated At</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {admins.length > 0 ? (
-              admins.map((admin) => (
-                <TableRow key={admin.admin_id}>
-                  <TableCell>{admin.admin_id}</TableCell>
-                  <TableCell>{admin.User?.name || 'N/A'}</TableCell>
-                  <TableCell>{admin.User?.email || 'N/A'}</TableCell>
-                  <TableCell>{admin.user_id}</TableCell>
+            {adminUsers.length > 0 ? (
+              adminUsers.map((user) => (
+                <TableRow key={user.user_id}>
+                  <TableCell>{user.user_id}</TableCell>
+                  <TableCell>{user.name || 'N/A'}</TableCell>
+                  <TableCell>{user.email || 'N/A'}</TableCell>
                   <TableCell>
-                    {new Date(admin.createdAt).toLocaleString()}
+                    {new Date(user.createdAt).toLocaleString()}
                   </TableCell>
                   <TableCell>
-                    {new Date(admin.updatedAt).toLocaleString()}
+                    {new Date(user.updatedAt).toLocaleString()}
                   </TableCell>
-                  <TableCell sx={{ display: 'flex', gap: 1 }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleEditAdmin(admin)}
+                  <TableCell>
+                    <IconButton
+                      aria-controls="admin-menu"
+                      aria-haspopup="true"
+                      onClick={(event) => handleMenuOpen(event, user.user_id)}
                     >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleDeleteAdmin(admin.admin_id)}
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      id="admin-menu"
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl) && menuAdminId === user.user_id}
+                      onClose={handleMenuClose}
                     >
-                      Delete
-                    </Button>
+                      <MenuItem onClick={() => handleEditAdmin(user)}>
+                        Edit
+                      </MenuItem>
+                      <MenuItem onClick={() => handleDeleteAdmin(user.user_id)}>
+                        Delete
+                      </MenuItem>
+                    </Menu>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7}>No admins available</TableCell>
+                <TableCell colSpan={6}>No admins available</TableCell>
               </TableRow>
             )}
           </TableBody>

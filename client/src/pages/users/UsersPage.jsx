@@ -1,3 +1,5 @@
+// src/pages/users/UsersPage.jsx
+
 import React, { useState } from 'react';
 import {
   useFetchUsersQuery,
@@ -12,6 +14,7 @@ import {
   TableRow,
   Paper,
   TableContainer,
+  Button,
   CircularProgress,
   TableHead,
   IconButton,
@@ -21,6 +24,7 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SearchFilter from '../../components/common/SearchFilter';
 import UserForm from '../../components/common/UserForm';
+import { capitalizeRole, lowercaseRole } from '../../utils/roleUtils';
 
 function UsersPage() {
   const { data, error, isLoading } = useFetchUsersQuery();
@@ -40,7 +44,11 @@ function UsersPage() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuUserId, setMenuUserId] = useState(null);
 
-  const users = data?.data || [];
+  const users =
+    data?.data.map((user) => ({
+      ...user,
+      role: capitalizeRole(user.role),
+    })) || [];
 
   const filteredUsers = users
     .filter((user) => {
@@ -72,25 +80,27 @@ function UsersPage() {
   const handleCreateOrUpdateUser = async () => {
     try {
       const userToSubmit = editingUser || newUser;
-      console.log('Submitting user:', userToSubmit);
 
-      if (
-        !['Admin', 'Teacher', 'Student', 'Parent'].includes(userToSubmit.role)
-      ) {
+      const validRoles = ['Admin', 'Teacher', 'Student', 'Parent'];
+      if (!validRoles.includes(userToSubmit.role)) {
         alert('Invalid role selected');
         return;
       }
 
-      if (userToSubmit.role !== 'Teacher') {
-        delete userToSubmit.subject;
+      const apiUser = {
+        ...userToSubmit,
+        role: lowercaseRole(userToSubmit.role),
+      };
+
+      if (apiUser.role !== 'teacher') {
+        delete apiUser.subject;
       }
 
       if (editingUser) {
-        await updateUser(userToSubmit).unwrap();
+        await updateUser(apiUser).unwrap();
         setEditingUser(null);
       } else {
-        const response = await createUser(userToSubmit).unwrap();
-        console.log('User created:', response);
+        await createUser(apiUser).unwrap();
         setNewUser({
           name: '',
           email: '',
@@ -151,9 +161,6 @@ function UsersPage() {
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
-              {filteredUsers.some((user) => user.role === 'Teacher') && (
-                <TableCell>Subject</TableCell>
-              )}
               <TableCell>Created At</TableCell>
               <TableCell>Updated At</TableCell>
               <TableCell>Actions</TableCell>
@@ -167,9 +174,6 @@ function UsersPage() {
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
-                  {user.role === 'Teacher' && (
-                    <TableCell>{user.subject}</TableCell>
-                  )}
                   <TableCell>
                     {new Date(user.createdAt).toLocaleString()}
                   </TableCell>
@@ -211,7 +215,7 @@ function UsersPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7}>No users available</TableCell>
+                <TableCell colSpan={8}>No users available</TableCell>
               </TableRow>
             )}
           </TableBody>
