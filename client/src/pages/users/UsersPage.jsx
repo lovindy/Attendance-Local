@@ -1,6 +1,5 @@
-// src/pages/users/UsersPage.jsx
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Correctly using useNavigate
 import {
   useFetchUsersQuery,
   useCreateUserMutation,
@@ -27,6 +26,7 @@ import UserForm from '../../components/common/UserForm';
 import { capitalizeRole, lowercaseRole } from '../../utils/roleUtils';
 
 function UsersPage() {
+  const navigate = useNavigate(); // Correctly using navigate
   const { data, error, isLoading } = useFetchUsersQuery();
   const [createUser] = useCreateUserMutation();
   const [updateUser] = useUpdateUserMutation();
@@ -171,7 +171,12 @@ function UsersPage() {
               filteredUsers.map((user) => (
                 <TableRow key={user.user_id}>
                   <TableCell>{user.user_id}</TableCell>
-                  <TableCell>{user.name}</TableCell>
+                  <TableCell
+                    onClick={() => navigate(`/users/${user.user_id}`)} // Corrected string interpolation
+                    style={{ cursor: 'pointer', color: 'blue' }}
+                  >
+                    {user.name}
+                  </TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
                   <TableCell>
@@ -189,16 +194,13 @@ function UsersPage() {
                       <MoreVertIcon />
                     </IconButton>
                     <Menu
+                      id="simple-menu"
                       anchorEl={anchorEl}
+                      keepMounted
                       open={menuUserId === user.user_id}
                       onClose={handleMenuClose}
                     >
-                      <MenuItem
-                        onClick={() => {
-                          setEditingUser(user);
-                          handleMenuClose();
-                        }}
-                      >
+                      <MenuItem onClick={() => setEditingUser(user)}>
                         Edit
                       </MenuItem>
                       <MenuItem
@@ -215,7 +217,9 @@ function UsersPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8}>No users available</TableCell>
+                <TableCell colSpan={7} align="center">
+                  No users found
+                </TableCell>
               </TableRow>
             )}
           </TableBody>

@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -35,26 +36,29 @@ const Navbar = () => {
         <ListItem button component={Link} to="/">
           <ListItemText primary="Dashboard" />
         </ListItem>
-        <ListItem button component={Link} to="/attendance">
-          <ListItemText primary="Attendance" />
+        <ListItem button component={Link} to="/users">
+          <ListItemText primary="User" />
+        </ListItem>
+        <ListItem button component={Link} to="/admins">
+          <ListItemText primary="Admin" />
+        </ListItem>
+        <ListItem button component={Link} to="/teachers">
+          <ListItemText primary="Teacher" />
         </ListItem>
         <ListItem button component={Link} to="/students">
           <ListItemText primary="Students" />
         </ListItem>
-        <ListItem button component={Link} to="/teachers">
-          <ListItemText primary="Teachers" />
-        </ListItem>
-        <ListItem button component={Link} to="/admins">
-          <ListItemText primary="Admins" />
-        </ListItem>
-        <ListItem button component={Link} to="/users">
-          <ListItemText primary="User" />
-        </ListItem>
         <ListItem button component={Link} to="/classes">
           <ListItemText primary="Class" />
         </ListItem>
-        <ListItem button component={Link} to="/test">
-          <ListItemText primary="Test" />
+        <ListItem button component={Link} to="/subjects">
+          <ListItemText primary="Subject" />
+        </ListItem>
+        <ListItem button component={Link} to="/sessions">
+          <ListItemText primary="Sessions" />
+        </ListItem>
+        <ListItem button component={Link} to="/report">
+          <ListItemText primary="Report" />
         </ListItem>
       </List>
     </div>
@@ -62,7 +66,10 @@ const Navbar = () => {
 
   return (
     <div>
-      <AppBar position="static">
+      <AppBar
+        position="static"
+        style={{ backgroundColor: '#fff', color: '#333' }}
+      >
         <Toolbar>
           <IconButton
             edge="start"
@@ -72,9 +79,15 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <div style={{ flexGrow: 1 }}></div>{' '}
-          {/* This empty div takes up the space in the middle */}
-          <Typography variant="h6">WaveTrack</Typography>
+          <Typography variant="h6" style={{ flexGrow: 1, color: '#000' }}>
+            WaveTrack
+          </Typography>
+          <IconButton color="inherit">
+            <AccountCircleIcon style={{ color: '#000' }} />
+            <Typography variant="body1" style={{ marginLeft: 8 }}>
+              Christaino Ronaldo
+            </Typography>
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
