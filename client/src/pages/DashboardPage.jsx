@@ -8,12 +8,37 @@ import {
   Box,
   Avatar,
   CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
+  Menu,
+  MenuItem,
+  Paper,
 } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useFetchUsersQuery } from '../services/usersApi';
 
 const DashboardPage = () => {
   const { data: response, isLoading, error } = useFetchUsersQuery();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedUser, setSelectedUser] = React.useState(null);
+
+  const handleMenuOpen = (event, user) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedUser(user);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedUser(null);
+  };
 
   if (isLoading) {
     return <CircularProgress />;
@@ -23,10 +48,7 @@ const DashboardPage = () => {
     return <Typography color="error">Failed to load data</Typography>;
   }
 
-  // Check if response is valid and extract user data
-  const users = response?.data || []; // Extract users from the data property
-
-  // Calculate the number of teachers and students
+  const users = response?.data || [];
   const teachers = users.filter((user) => user.role === 'teacher');
   const students = users.filter((user) => user.role === 'student');
 
@@ -74,11 +96,66 @@ const DashboardPage = () => {
               <Typography variant="body2" color="textSecondary" gutterBottom>
                 There are {teachers.length || 0} teachers
               </Typography>
-              {/* Implement the table here, showing default data if needed */}
+
               {teachers.length === 0 ? (
                 <Typography>No teachers available</Typography>
               ) : (
-                <Typography>Display your teachers list here</Typography>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell padding="checkbox">
+                          <input type="checkbox" />
+                        </TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Gender</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Phone Number</TableCell>
+                        <TableCell align="right">Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {teachers.map((teacher) => (
+                        <TableRow key={teacher.id}>
+                          <TableCell padding="checkbox">
+                            <input type="checkbox" />
+                          </TableCell>
+                          <TableCell>{teacher.name}</TableCell>
+                          <TableCell>{teacher.gender}</TableCell>
+                          <TableCell>{teacher.email}</TableCell>
+                          <TableCell>{teacher.phone}</TableCell>
+                          <TableCell align="right">
+                            <IconButton
+                              onClick={(event) =>
+                                handleMenuOpen(event, teacher)
+                              }
+                            >
+                              <MoreVertIcon />
+                            </IconButton>
+                            <Menu
+                              anchorEl={anchorEl}
+                              keepMounted
+                              open={
+                                Boolean(anchorEl) &&
+                                selectedUser?.id === teacher.id
+                              }
+                              onClose={handleMenuClose}
+                            >
+                              <MenuItem onClick={handleMenuClose}>
+                                <EditIcon sx={{ mr: 1 }} />
+                                Edit
+                              </MenuItem>
+                              <MenuItem onClick={handleMenuClose}>
+                                <DeleteIcon sx={{ mr: 1 }} />
+                                Delete
+                              </MenuItem>
+                            </Menu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               )}
             </CardContent>
           </Card>

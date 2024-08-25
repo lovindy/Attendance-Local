@@ -7,11 +7,22 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListItemIcon,
   IconButton,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HomeIcon from '@mui/icons-material/Home';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import ClassIcon from '@mui/icons-material/Class';
+import BookIcon from '@mui/icons-material/Book';
+import PeopleIcon from '@mui/icons-material/People';
+import PersonIcon from '@mui/icons-material/Person';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import ReportIcon from '@mui/icons-material/Report';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -34,31 +45,78 @@ const Navbar = () => {
     >
       <List>
         <ListItem button component={Link} to="/">
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItem>
-        <ListItem button component={Link} to="/users">
-          <ListItemText primary="User" />
-        </ListItem>
-        <ListItem button component={Link} to="/admins">
-          <ListItemText primary="Admin" />
-        </ListItem>
-        <ListItem button component={Link} to="/teachers">
-          <ListItemText primary="Teacher" />
-        </ListItem>
-        <ListItem button component={Link} to="/students">
-          <ListItemText primary="Students" />
+        <ListItem button component={Link} to="/schedule">
+          <ListItemIcon>
+            <CalendarTodayIcon />
+          </ListItemIcon>
+          <ListItemText primary="Schedule" />
         </ListItem>
         <ListItem button component={Link} to="/classes">
+          <ListItemIcon>
+            <ClassIcon />
+          </ListItemIcon>
           <ListItemText primary="Class" />
         </ListItem>
         <ListItem button component={Link} to="/subjects">
+          <ListItemIcon>
+            <BookIcon />
+          </ListItemIcon>
           <ListItemText primary="Subject" />
         </ListItem>
+        <ListItem button component={Link} to="/users">
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Users" />
+        </ListItem>
+        <ListItem button component={Link} to="/admins">
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Admins" />
+        </ListItem>
+        <ListItem button component={Link} to="/students">
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Students" />
+        </ListItem>
+        <ListItem button component={Link} to="/teachers">
+          <ListItemIcon>
+            <PersonIcon />
+          </ListItemIcon>
+          <ListItemText primary="Teacher" />
+        </ListItem>
         <ListItem button component={Link} to="/sessions">
+          <ListItemIcon>
+            <ScheduleIcon />
+          </ListItemIcon>
           <ListItemText primary="Sessions" />
         </ListItem>
         <ListItem button component={Link} to="/report">
+          <ListItemIcon>
+            <ReportIcon />
+          </ListItemIcon>
           <ListItemText primary="Report" />
+        </ListItem>
+      </List>
+      <List style={{ marginTop: 'auto' }}>
+        <ListItem button component={Link} to="/settings">
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText primary="Setting" />
+        </ListItem>
+        <ListItem button component={Link} to="/logout">
+          <ListItemIcon>
+            <ExitToAppIcon />
+          </ListItemIcon>
+          <ListItemText primary="Logout" />
         </ListItem>
       </List>
     </div>
