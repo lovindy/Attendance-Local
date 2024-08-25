@@ -23,13 +23,12 @@ const DashboardPage = () => {
     return <Typography color="error">Failed to load data</Typography>;
   }
 
-  if (!Array.isArray(users)) {
-    return <Typography color="error">Unexpected data format</Typography>;
-  }
+  // Ensure users is an array, even if it's empty or undefined
+  const userArray = Array.isArray(users) ? users : [];
 
   // Calculate the number of teachers and students
-  const teachers = users.filter((user) => user.role === 'teacher');
-  const students = users.filter((user) => user.role === 'student');
+  const teachers = userArray.filter((user) => user.role === 'teacher');
+  const students = userArray.filter((user) => user.role === 'student');
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -43,8 +42,8 @@ const DashboardPage = () => {
                   <PeopleIcon />
                 </Avatar>
                 <Box>
-                  <Typography variant="h5">Total Teacher</Typography>
-                  <Typography variant="h3">{teachers.length}</Typography>
+                  <Typography variant="h5">Total Teachers</Typography>
+                  <Typography variant="h3">{teachers.length || 0}</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -59,8 +58,8 @@ const DashboardPage = () => {
                   <PeopleIcon />
                 </Avatar>
                 <Box>
-                  <Typography variant="h5">Total Student</Typography>
-                  <Typography variant="h3">{students.length}</Typography>
+                  <Typography variant="h5">Total Students</Typography>
+                  <Typography variant="h3">{students.length || 0}</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -71,11 +70,17 @@ const DashboardPage = () => {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <Typography variant="h6">TOTAL TEACHER</Typography>
+              <Typography variant="h6">Total Teachers</Typography>
               <Typography variant="body2" color="textSecondary" gutterBottom>
-                There are {teachers.length} teachers
+                There are {teachers.length || 0} teachers
               </Typography>
-              {/* Implement the table here */}
+              {/* Implement the table here, showing default data if needed */}
+              {/* Example Placeholder */}
+              {teachers.length === 0 ? (
+                <Typography>No teachers available</Typography>
+              ) : (
+                <Typography>Display your teachers list here</Typography>
+              )}
             </CardContent>
           </Card>
         </Grid>
