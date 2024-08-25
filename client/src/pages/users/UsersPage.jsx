@@ -50,6 +50,8 @@ function UsersPage() {
       role: capitalizeRole(user.role),
     })) || [];
 
+    console.log(data)
+
   const filteredUsers = users
     .filter((user) => {
       return Object.keys(filters).every((key) =>

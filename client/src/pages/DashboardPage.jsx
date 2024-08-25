@@ -13,7 +13,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import { useFetchUsersQuery } from '../services/usersApi';
 
 const DashboardPage = () => {
-  const { data: users, isLoading, error } = useFetchUsersQuery();
+  const { data: response, isLoading, error } = useFetchUsersQuery();
 
   if (isLoading) {
     return <CircularProgress />;
@@ -23,12 +23,12 @@ const DashboardPage = () => {
     return <Typography color="error">Failed to load data</Typography>;
   }
 
-  // Ensure users is an array, even if it's empty or undefined
-  const userArray = Array.isArray(users) ? users : [];
+  // Check if response is valid and extract user data
+  const users = response?.data || []; // Extract users from the data property
 
   // Calculate the number of teachers and students
-  const teachers = userArray.filter((user) => user.role === 'teacher');
-  const students = userArray.filter((user) => user.role === 'student');
+  const teachers = users.filter((user) => user.role === 'teacher');
+  const students = users.filter((user) => user.role === 'student');
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -75,7 +75,6 @@ const DashboardPage = () => {
                 There are {teachers.length || 0} teachers
               </Typography>
               {/* Implement the table here, showing default data if needed */}
-              {/* Example Placeholder */}
               {teachers.length === 0 ? (
                 <Typography>No teachers available</Typography>
               ) : (
