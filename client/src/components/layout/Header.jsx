@@ -23,6 +23,8 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import ReportIcon from '@mui/icons-material/Report';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import SchoolIcon from '@mui/icons-material/School';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -76,16 +78,17 @@ const Navbar = () => {
         </ListItem>
         <ListItem button component={Link} to="/admins">
           <ListItemIcon>
-            <PeopleIcon />
+            <AdminPanelSettingsIcon />
           </ListItemIcon>
           <ListItemText primary="Admins" />
         </ListItem>
         <ListItem button component={Link} to="/students">
           <ListItemIcon>
-            <PeopleIcon />
+            <SchoolIcon />
           </ListItemIcon>
           <ListItemText primary="Students" />
         </ListItem>
+
         <ListItem button component={Link} to="/teachers">
           <ListItemIcon>
             <PersonIcon />
