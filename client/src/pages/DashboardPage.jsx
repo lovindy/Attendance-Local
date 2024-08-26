@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import {
   Container,
   Grid,
@@ -27,8 +27,8 @@ import { useFetchUsersQuery } from '../services/usersApi';
 
 const DashboardPage = () => {
   const { data: response, isLoading, error } = useFetchUsersQuery();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedUser, setSelectedUser] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const handleMenuOpen = (event, user) => {
     setAnchorEl(event.currentTarget);
@@ -116,7 +116,7 @@ const DashboardPage = () => {
                     </TableHead>
                     <TableBody>
                       {teachers.map((teacher) => (
-                        <TableRow key={teacher.id}>
+                        <TableRow key={teacher.user_id}>
                           <TableCell padding="checkbox">
                             <input type="checkbox" />
                           </TableCell>
@@ -137,7 +137,7 @@ const DashboardPage = () => {
                               keepMounted
                               open={
                                 Boolean(anchorEl) &&
-                                selectedUser?.id === teacher.id
+                                selectedUser?.id === teacher.user_id
                               }
                               onClose={handleMenuClose}
                             >
