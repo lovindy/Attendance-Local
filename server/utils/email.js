@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const pug = require('pug');
 const htmlToText = require('html-to-text');
 
 module.exports = class Email {
@@ -7,12 +6,12 @@ module.exports = class Email {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    this.from = `Jonas Schmedtmann <${process.env.EMAIL_FROM}>`;
+    this.from = `Your Name <${process.env.EMAIL_FROM}>`;
   }
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
-      // Sendgrid
+      // Use SendGrid in production
       return nodemailer.createTransport({
         service: 'SendGrid',
         auth: {
@@ -22,6 +21,7 @@ module.exports = class Email {
       });
     }
 
+    // Use a different mail service in development
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
@@ -32,14 +32,27 @@ module.exports = class Email {
     });
   }
 
+  // Create the email content as an HTML string
+  generateHTML(template, subject) {
+    let html;
+    if (template === 'welcome') {
+      html = `<h1>Welcome, ${this.firstName}!</h1>
+              <p>We're excited to have you at our platform. Please confirm your email address by clicking the link below:</p>
+              <a href="${this.url}">Confirm your email</a>`;
+    } else if (template === 'passwordReset') {
+      html = `<h1>Password Reset</h1>
+              <p>Hi ${this.firstName},</p>
+              <p>You requested a password reset. Please click the link below to reset your password:</p>
+              <a href="${this.url}">Reset your password</a>`;
+    }
+
+    return html;
+  }
+
   // Send the actual email
   async send(template, subject) {
-    // 1) Render HTML based on a pug template
-    const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
-      firstName: this.firstName,
-      url: this.url,
-      subject,
-    });
+    // 1) Generate the HTML content
+    const html = this.generateHTML(template, subject);
 
     // 2) Define email options
     const mailOptions = {
@@ -47,15 +60,15 @@ module.exports = class Email {
       to: this.to,
       subject,
       html,
-      text: htmlToText.fromString(html),
+      text: htmlToText.convert(html),
     };
 
-    // 3) Create a transport and send email
+    // 3) Create a transport and send the email
     await this.newTransport().sendMail(mailOptions);
   }
 
   async sendWelcome() {
-    await this.send('welcome', 'Welcome to the Natours Family!');
+    await this.send('welcome', 'Welcome to Our Platform!');
   }
 
   async sendPasswordReset() {
