@@ -10,6 +10,11 @@ import AdminsPage from './pages/admins/AdminsPage';
 import UsersPage from './pages/users/UsersPage';
 import UserDetail from './pages/users/UserDetail';
 import ClassPage from './pages/classes/ClassPage';
+
+// authentication
+import SignupPage from './pages/auth/SignupPage';
+import LoginPage from './pages/auth/LoginPage';
+
 // Common Components
 import Navbar from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -18,6 +23,8 @@ const App = () => (
   <>
     <Navbar />
     <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
       <Route path="/" element={<DashboardPage />} />
       <Route path="/attendance" element={<AttendancePage />} />
       <Route path="/students" element={<StudentsPage />} />
