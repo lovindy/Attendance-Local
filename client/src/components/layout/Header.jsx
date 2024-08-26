@@ -146,7 +146,7 @@ const Navbar = () => {
           <IconButton color="inherit">
             <AccountCircleIcon style={{ color: '#000' }} />
             <Typography variant="body1" style={{ marginLeft: 8 }}>
-              Christaino Ronaldo
+              Seang Makaramardy
             </Typography>
           </IconButton>
         </Toolbar>
