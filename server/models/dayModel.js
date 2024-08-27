@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const DayOfWeek = sequelize.define(
-    'Day',
+    'DayOfWeek', // Changed to match the association names
     {
       day_id: {
         type: DataTypes.INTEGER,
@@ -31,11 +31,14 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  // Association
-  DayOfWeek.hasMany(models.Schedule, {
-    foreignKey: 'day_id',
-    as: 'Schedules',
-    onDelete: 'CASCADE',
-  });
+
+  DayOfWeek.associate = (models) => {
+    DayOfWeek.hasMany(models.Schedule, {
+      foreignKey: 'day_id',
+      as: 'Schedules',
+      onDelete: 'CASCADE',
+    });
+  };
+
   return DayOfWeek;
 };
