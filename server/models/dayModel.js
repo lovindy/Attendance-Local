@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const DayOfWeek = sequelize.define(
-    'DayOfWeek', // Changed to match the association names
+    'DayOfWeek',
     {
       day_id: {
         type: DataTypes.INTEGER,

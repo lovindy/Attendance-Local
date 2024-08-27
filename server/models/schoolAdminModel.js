@@ -1,26 +1,14 @@
-// models/schoolAdminModel.js
 module.exports = (sequelize, DataTypes) => {
   const SchoolAdmin = sequelize.define(
     'SchoolAdmin',
     {
-      // Define additional columns here
-      admin_id: {
+      school_admin_id: {
         type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
       },
-      school_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-      },
-      // Add additional fields as needed
-      role: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      assigned_date: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
+      role: DataTypes.STRING, // e.g., 'Principal', 'Vice Principal'
+      assigned_date: DataTypes.DATE,
       active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
@@ -28,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: 'school_admins',
+      tableName: 'school_admin',
       timestamps: true,
       underscored: true,
     }
@@ -42,6 +30,14 @@ module.exports = (sequelize, DataTypes) => {
     SchoolAdmin.belongsTo(models.School, {
       foreignKey: 'school_id',
       as: 'School',
+    });
+    SchoolAdmin.hasMany(models.Teacher, {
+      foreignKey: 'school_admin_id',
+      as: 'Teachers',
+    });
+    SchoolAdmin.hasMany(models.Student, {
+      foreignKey: 'school_admin_id',
+      as: 'Students',
     });
   };
 

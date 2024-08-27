@@ -7,18 +7,9 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      address: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      logo_url: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      name: DataTypes.STRING,
+      address: DataTypes.STRING,
+      logo_url: DataTypes.STRING,
       active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
@@ -33,16 +24,22 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   School.associate = (models) => {
-    School.hasMany(models.Admin, {
+    School.belongsToMany(models.Admin, {
+      through: models.SchoolAdmin,
       foreignKey: 'school_id',
       as: 'Admins',
-      onDelete: 'CASCADE',
     });
-    School.belongsToMany(models.Admin, {
-      through: models.SchoolAdmin, // Reference the junction table model
+    School.hasMany(models.Teacher, {
       foreignKey: 'school_id',
-      as: 'Administrators',
-      onDelete: 'CASCADE',
+      as: 'Teachers',
+    });
+    School.hasMany(models.Student, {
+      foreignKey: 'school_id',
+      as: 'Students',
+    });
+    School.hasMany(models.Class, {
+      foreignKey: 'school_id',
+      as: 'Classes',
     });
   };
 

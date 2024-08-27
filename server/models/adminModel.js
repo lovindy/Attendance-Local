@@ -21,21 +21,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Admin.associate = (models) => {
-    Admin.belongsTo(models.User, {
-      foreignKey: 'user_id',
-      as: 'User',
-      onDelete: 'CASCADE',
-    });
-    Admin.hasMany(models.Teacher, {
-      foreignKey: 'admin_id',
-      as: 'Teachers',
-      onDelete: 'CASCADE',
-    });
+    Admin.belongsTo(models.User, { foreignKey: 'user_id', as: 'User' });
     Admin.belongsToMany(models.School, {
-      through: models.SchoolAdmin, // Reference the junction table model
+      through: models.SchoolAdmin,
       foreignKey: 'admin_id',
-      as: 'ParticipatingSchools',
-      onDelete: 'CASCADE',
+      as: 'Schools',
     });
   };
 

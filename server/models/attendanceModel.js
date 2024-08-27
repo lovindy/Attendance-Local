@@ -35,17 +35,21 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Attendance.associate = (models) => {
-    // Attendance belongs to a Student
     Attendance.belongsTo(models.Student, {
       foreignKey: 'student_id',
       as: 'Student',
       onDelete: 'CASCADE',
     });
 
-    // Attendance belongs to a Class
     Attendance.belongsTo(models.Class, {
       foreignKey: 'class_id',
       as: 'Class',
+      onDelete: 'CASCADE',
+    });
+
+    Attendance.belongsTo(models.Schedule, {
+      foreignKey: 'schedule_id',
+      as: 'Schedule',
       onDelete: 'CASCADE',
     });
   };

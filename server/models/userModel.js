@@ -28,8 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         );
         return JWTTimestamp < changedTimestamp;
       }
-      // False means NOT changed
-      return false;
+      return false; // False means NOT changed
     }
 
     /**
@@ -105,7 +104,7 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         type: DataTypes.ENUM('admin', 'teacher', 'student'),
         allowNull: false,
-        defaultValue: 'admin',
+        defaultValue: 'student',
         validate: {
           isIn: {
             args: [['admin', 'teacher', 'student']],
@@ -188,6 +187,8 @@ module.exports = (sequelize, DataTypes) => {
       as: 'AdminProfile',
       onDelete: 'CASCADE',
     });
+
+    // This association ensures that a user can have one profile (admin, teacher, or student) based on the role.
   };
 
   return User;

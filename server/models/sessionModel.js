@@ -30,5 +30,14 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  Session.associate = (models) => {
+    Session.hasMany(models.Schedule, {
+      foreignKey: 'session_id',
+      as: 'Schedules',
+      onDelete: 'CASCADE',
+    });
+  };
+
   return Session;
 };

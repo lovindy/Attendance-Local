@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       start_time: DataTypes.TIME,
       end_time: DataTypes.TIME,
-      day: DataTypes.STRING,
     },
     {
       tableName: 'schedules',
@@ -26,23 +25,28 @@ module.exports = (sequelize, DataTypes) => {
     Schedule.belongsTo(models.Class, {
       foreignKey: 'class_id',
       as: 'Class',
+      onDelete: 'CASCADE',
+    });
+    Schedule.belongsTo(models.DayOfWeek, {
+      foreignKey: 'day_id',
+      as: 'Day',
+    });
+
+    Schedule.belongsTo(models.Session, {
+      foreignKey: 'session_id',
+      as: 'Session',
     });
 
     Schedule.belongsToMany(models.Teacher, {
-      through: 'teacher_schedule', // or models.TeacherSchedule if it's a model
+      through: 'teacher_schedules', // Many-to-Many relationship
       foreignKey: 'schedule_id',
       as: 'Teachers',
     });
 
     Schedule.belongsToMany(models.Subject, {
-      through: 'class_subjects', // or models.ClassSubjects if it's a model
+      through: 'schedule_subjects', // Many-to-Many relationship
       foreignKey: 'schedule_id',
       as: 'Subjects',
-    });
-
-    Schedule.belongsTo(models.DayOfWeek, {
-      foreignKey: 'day_id',
-      as: 'Day',
     });
   };
 
