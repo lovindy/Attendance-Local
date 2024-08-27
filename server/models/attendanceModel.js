@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 'absent',
       },
+      active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
     },
     {
       tableName: 'attendances',

@@ -1,4 +1,3 @@
-// Admin Model Example (Refined)
 module.exports = (sequelize, DataTypes) => {
   const Admin = sequelize.define(
     'Admin',
@@ -7,6 +6,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
       },
     },
     {
@@ -25,6 +29,12 @@ module.exports = (sequelize, DataTypes) => {
     Admin.hasMany(models.Teacher, {
       foreignKey: 'admin_id',
       as: 'Teachers',
+      onDelete: 'CASCADE',
+    });
+    Admin.belongsToMany(models.School, {
+      through: models.SchoolAdmin, // Reference the junction table model
+      foreignKey: 'admin_id',
+      as: 'ParticipatingSchools',
       onDelete: 'CASCADE',
     });
   };
