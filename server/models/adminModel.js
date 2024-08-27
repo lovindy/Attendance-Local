@@ -21,7 +21,10 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Admin.associate = (models) => {
-    Admin.belongsTo(models.User, { foreignKey: 'user_id', as: 'User' });
+    Admin.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      as: 'User',
+    });
     Admin.belongsToMany(models.School, {
       through: models.SchoolAdmin,
       foreignKey: 'admin_id',

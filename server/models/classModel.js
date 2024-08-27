@@ -7,8 +7,14 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      name: DataTypes.STRING,
-      grade: DataTypes.STRING,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      grade: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
@@ -27,13 +33,28 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'teacher_id',
       as: 'Teacher',
     });
-    Class.belongsTo(models.School, {
-      foreignKey: 'school_id',
-      as: 'School',
+
+    Class.belongsTo(models.SchoolAdmin, {
+      foreignKey: 'school_admin_id',
+      as: 'SchoolAdmin',
     });
+
     Class.hasMany(models.Student, {
       foreignKey: 'class_id',
       as: 'Students',
+    });
+
+    Class.hasMany(models.Schedule, {
+      foreignKey: 'class_id',
+      as: 'Schedules',
+      onDelete: 'CASCADE',
+    });
+
+    Class.belongsToMany(models.Subject, {
+      through: 'class_subjects',
+      foreignKey: 'class_id',
+      otherKey: 'subject_id',
+      as: 'Subjects',
     });
   };
 

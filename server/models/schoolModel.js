@@ -29,18 +29,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'school_id',
       as: 'Admins',
     });
-    School.hasMany(models.Teacher, {
-      foreignKey: 'school_id',
-      as: 'Teachers',
-    });
-    School.hasMany(models.Student, {
-      foreignKey: 'school_id',
-      as: 'Students',
-    });
-    School.hasMany(models.Class, {
-      foreignKey: 'school_id',
-      as: 'Classes',
-    });
   };
 
   return School;

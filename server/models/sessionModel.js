@@ -12,16 +12,17 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       session_start_time: {
-        type: DataTypes.DATE,
+        type: DataTypes.TIME,
         allowNull: false,
       },
       session_end_time: {
-        type: DataTypes.DATE,
+        type: DataTypes.TIME,
         allowNull: false,
       },
-      isActive: {
+      active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
+        allowNull: false,
       },
     },
     {

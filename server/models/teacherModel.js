@@ -29,13 +29,17 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'user_id',
       as: 'User',
     });
+
     Teacher.belongsTo(models.SchoolAdmin, {
       foreignKey: 'school_admin_id',
       as: 'SchoolAdmin',
     });
-    Teacher.hasMany(models.Class, {
+
+    Teacher.belongsToMany(models.Schedule, {
+      through: 'teacher_schedules',
       foreignKey: 'teacher_id',
-      as: 'Classes',
+      otherKey: 'schedule_id',
+      as: 'Schedules',
     });
   };
 

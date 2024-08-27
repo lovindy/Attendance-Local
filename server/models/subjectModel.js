@@ -31,12 +31,14 @@ module.exports = (sequelize, DataTypes) => {
     Subject.belongsToMany(models.Class, {
       through: 'class_subjects',
       foreignKey: 'subject_id',
+      otherKey: 'class_id',
       as: 'Classes',
     });
 
     Subject.belongsToMany(models.Schedule, {
       through: 'schedule_subjects',
       foreignKey: 'subject_id',
+      otherKey: 'schedule_id',
       as: 'Schedules',
     });
   };

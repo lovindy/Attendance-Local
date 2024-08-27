@@ -27,25 +27,30 @@ module.exports = (sequelize, DataTypes) => {
       as: 'Class',
       onDelete: 'CASCADE',
     });
+
     Schedule.belongsTo(models.DayOfWeek, {
       foreignKey: 'day_id',
       as: 'Day',
+      onDelete: 'CASCADE',
     });
 
     Schedule.belongsTo(models.Session, {
       foreignKey: 'session_id',
       as: 'Session',
+      onDelete: 'CASCADE',
     });
 
     Schedule.belongsToMany(models.Teacher, {
-      through: 'teacher_schedules', // Many-to-Many relationship
+      through: 'teacher_schedules',
       foreignKey: 'schedule_id',
+      otherKey: 'teacher_id',
       as: 'Teachers',
     });
 
     Schedule.belongsToMany(models.Subject, {
-      through: 'schedule_subjects', // Many-to-Many relationship
+      through: 'schedule_subjects',
       foreignKey: 'schedule_id',
+      otherKey: 'subject_id',
       as: 'Subjects',
     });
   };
