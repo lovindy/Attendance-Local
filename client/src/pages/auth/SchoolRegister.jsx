@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import { useSignupMutation } from '../../services/auth';
 import { Link } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
-import Logo from '../../data/svg/Logo.svg'; // Update this path based on your file structure
+import Logo from '../../data/svg/school logo.svg'; // Update this path based on your file structure
 
-const SignupPage = () => {
+const SchoolRegister = () => {
   const [signup, { isLoading }] = useSignupMutation();
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await signup({ name, email, password, passwordConfirm }).unwrap();
+      await signup({ name, phone, address }).unwrap();
       // Handle successful signup (e.g., redirect, show message)
     } catch (error) {
       // Handle signup error (e.g., show error message)
@@ -46,12 +45,12 @@ const SignupPage = () => {
           </Box>
 
           <Typography variant="h5" gutterBottom align="center">
-            Sign Up
+            Introduce Your School to WaveTrack
           </Typography>
           <form onSubmit={handleSubmit}>
             <Box mb={2}>
               <TextField
-                label="Name"
+                label="school's Name"
                 variant="outlined"
                 fullWidth
                 value={name}
@@ -60,31 +59,20 @@ const SignupPage = () => {
             </Box>
             <Box mb={2}>
               <TextField
-                label="Email"
+                label="phone number"
                 variant="outlined"
                 fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
               />
             </Box>
             <Box mb={2}>
               <TextField
-                label="Password"
-                type="password"
+                label="Address"
                 variant="outlined"
                 fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Box>
-            <Box mb={2}>
-              <TextField
-                label="Confirm Password"
-                type="password"
-                variant="outlined"
-                fullWidth
-                value={passwordConfirm}
-                onChange={(e) => setPasswordConfirm(e.target.value)}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
               />
             </Box>
             <Box mt={3}>
@@ -95,7 +83,7 @@ const SignupPage = () => {
                 fullWidth
                 disabled={isLoading}
               >
-                {isLoading ? 'Signing up...' : 'Sign Up'}
+                {isLoading ? 'Signing up...' : 'Finish'}
               </Button>
             </Box>
             <Box mt={2} textAlign="center">
@@ -110,4 +98,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default SchoolRegister;

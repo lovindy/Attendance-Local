@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useLoginMutation } from '../../services/auth';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
 import LoginImage from '../../data/svg/Logo.svg'; // Adjust the path if necessary
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 const LoginPage = () => {
   const [login, { isLoading }] = useLoginMutation();
