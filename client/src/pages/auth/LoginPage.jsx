@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate separately
 import { useLoginMutation } from '../../services/auth';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
 import LoginImage from '../../data/svg/Logo.svg'; // Adjust the path if necessary
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +15,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       await login({ email, password }).unwrap();
-      // Handle successful login (e.g., redirect, show message)
+      navigate('/dashboard'); // Redirect to the dashboard page
     } catch (error) {
       // Handle login error (e.g., show error message)
       console.error('Failed to login:', error);

@@ -1,23 +1,33 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSignupMutation } from '../../services/auth';
+import { useCreateSchoolMutation } from '../../services/schoolApi';
 import { Link } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
-import Logo from '../../data/svg/school logo.svg'; // Update this path based on your file structure
+import Logo from '../../data/svg/school logo.svg';
 
 const SchoolRegister = () => {
-  const [signup, { isLoading }] = useSignupMutation();
+  const [signup, { isLoading: isSignupLoading }] = useSignupMutation();
+  const [createSchool, { isLoading: isCreateSchoolLoading }] =
+    useCreateSchoolMutation();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await signup({ name, phone, address }).unwrap();
-      // Handle successful signup (e.g., redirect, show message)
+      // First, sign up the user
+      const user = await signup({ name, phone, address }).unwrap();
+
+      // After signup is successful, create the school
+      await createSchool({ name, phone, address, userId: user.id }).unwrap();
+
+      // Redirect to the dashboard or the desired page
+      navigate('/dashboard');
     } catch (error) {
-      // Handle signup error (e.g., show error message)
-      console.error('Failed to signup:', error);
+      console.error('Failed to sign up or create school:', error);
     }
   };
 
@@ -30,7 +40,6 @@ const SchoolRegister = () => {
     >
       <Grid item xs={12} sm={8} md={5}>
         <Paper elevation={6} style={{ padding: '2rem' }}>
-          {/* Logo */}
           <Box
             display="flex"
             justifyContent="center"
@@ -50,7 +59,7 @@ const SchoolRegister = () => {
           <form onSubmit={handleSubmit}>
             <Box mb={2}>
               <TextField
-                label="school's Name"
+                label="School's Name"
                 variant="outlined"
                 fullWidth
                 value={name}
@@ -59,7 +68,7 @@ const SchoolRegister = () => {
             </Box>
             <Box mb={2}>
               <TextField
-                label="phone number"
+                label="Phone Number"
                 variant="outlined"
                 fullWidth
                 value={phone}
@@ -81,9 +90,11 @@ const SchoolRegister = () => {
                 variant="contained"
                 color="primary"
                 fullWidth
-                disabled={isLoading}
+                disabled={isSignupLoading || isCreateSchoolLoading}
               >
-                {isLoading ? 'Signing up...' : 'Finish'}
+                {isSignupLoading || isCreateSchoolLoading
+                  ? 'Processing...'
+                  : 'Finish'}
               </Button>
             </Box>
             <Box mt={2} textAlign="center">

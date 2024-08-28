@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSignupMutation } from '../../services/auth';
 import { Link } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
-import Logo from '../../data/svg/Logo.svg'; // Update this path based on your file structure
+import Logo from '../../data/svg/Logo.svg';
 
 const SignupPage = () => {
   const [signup, { isLoading }] = useSignupMutation();
@@ -10,14 +11,14 @@ const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await signup({ name, email, password, passwordConfirm }).unwrap();
-      // Handle successful signup (e.g., redirect, show message)
+      navigate('/login'); // Redirect to the school registration page
     } catch (error) {
-      // Handle signup error (e.g., show error message)
       console.error('Failed to signup:', error);
     }
   };
@@ -31,7 +32,6 @@ const SignupPage = () => {
     >
       <Grid item xs={12} sm={8} md={5}>
         <Paper elevation={6} style={{ padding: '2rem' }}>
-          {/* Logo */}
           <Box
             display="flex"
             justifyContent="center"

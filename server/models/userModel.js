@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { Model } = require('sequelize');
-const validator = require('validator');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -49,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
+  // Define user model
   User.init(
     {
       user_id: {
