@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       subject: {
         type: DataTypes.STRING,
-        allowNull: false,
+        defaultValue: null,
       },
       active: {
         type: DataTypes.BOOLEAN,

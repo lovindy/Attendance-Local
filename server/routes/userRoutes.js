@@ -8,13 +8,22 @@ const router = express.Router();
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
-// User routes
-router.route('/').get(userController.getAllUsers).post(userController.addUser);
+// Protect all routes after this middleware
+router.use(authController.protect);
+
+// Get Current User
+router.get('/me', userController.getMe, userController.getUser);
+
+// User routes (protected and restricted to 'admin' only)
+router
+  .route('/')
+  .get(authController.restrictTo('admin'), userController.getAllUsers)
+  .post(authController.restrictTo('admin'), userController.addUser);
 
 router
   .route('/:id')
-  .get(userController.getUser)
-  .put(userController.updateUser)
-  .delete(userController.deleteUser);
+  .get(authController.restrictTo('admin'), userController.getUser)
+  .put(authController.restrictTo('admin'), userController.updateUser)
+  .delete(authController.restrictTo('admin'), userController.deleteUser);
 
 module.exports = router;

@@ -62,6 +62,12 @@ exports.updateUser = factory.updateOne(User, 'user_id');
 // Delete User
 exports.deleteUser = factory.deleteOne(User, 'user_id');
 
+// Middleware to get the current logged-in user
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
 // Get one User
 exports.getUser = factory.getOne(User, 'user_id', [
   { model: Admin, as: 'AdminProfile' },
